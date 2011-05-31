@@ -1,0 +1,73 @@
+require 'spec_helper'
+
+describe Cluster do
+  it "should run kmeans for the given data" do
+    nclusters = 3
+    # First data set
+    weight = [1,1,1,1,1]
+    data   = [[ 1.1, 2.2, 3.3, 4.4, 5.5],
+              [ 3.1, 3.2, 1.3, 2.4, 1.5], 
+              [ 4.1, 2.2, 0.3, 5.4, 0.5], 
+              [12.1, 2.0, 0.0, 5.0, 0.0]]
+    mask   = [[ 1, 1, 1, 1, 1], 
+             [ 1, 1, 1, 1, 1], 
+             [ 1, 1, 1, 1, 1], 
+             [ 1, 1, 1, 1, 1]]
+  
+  
+    clusterid = Cluster.kcluster data, :clusters  => nclusters, 
+                                       :mask      => mask, 
+                                       :weight    => weight,
+                                       :transpose => false, 
+                                       :passes    => 100, 
+                                       :method    => 'a', 
+                                       :dist      => 'e'
+  
+    clusterid.size.should == data.size
+    clusterid.sort.should == [0,1,1,2]
+  end
+  
+  it "should run kmeans for a second set of data" do
+    weight = [1,1]
+    data = [ [ 1.1, 1.2 ],
+             [ 1.4, 1.3 ],
+             [ 1.1, 1.5 ],
+             [ 2.0, 1.5 ],
+             [ 1.7, 1.9 ],
+             [ 1.7, 1.9 ],
+             [ 5.7, 5.9 ],
+             [ 5.7, 5.9 ],
+             [ 3.1, 3.3 ],
+             [ 5.4, 5.3 ],
+             [ 5.1, 5.5 ],
+             [ 5.0, 5.5 ],
+             [ 5.1, 5.2 ]]
+             
+    mask = [ [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ],
+             [ 1, 1 ]]
+    
+    clusterid = Cluster.kcluster data, :clusters  => 3,
+                                       :mask      => mask,
+                                       :weight    => weight,
+                                       :transpose => false,
+                                       :passes    => 100,
+                                       :method    => 'a',
+                                       :dist      => 'e'
+    
+    clusterid.size.should == data.size
+    
+    correct = [0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1]
+    clusterid.sort.should == correct.sort
+  end
+end
