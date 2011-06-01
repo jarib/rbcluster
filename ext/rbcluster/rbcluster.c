@@ -115,7 +115,11 @@ VALUE rbcluster_ints2rb(int* ints, long rows) {
   ‘b’	City-block distance.
 */
 
-VALUE rbcluster_kcluster(VALUE self, VALUE arr, VALUE opts) {
+VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
+  VALUE arr, opts;
+
+  rb_scan_args(argc, argv, "11", &arr, &opts);
+
   int nrows, ncols;
   double** data = rbcluster_ary_to_rows(arr, &nrows, &ncols);
   int** mask = malloc(nrows*sizeof(int*));
@@ -214,5 +218,5 @@ VALUE rbcluster_kcluster(VALUE self, VALUE arr, VALUE opts) {
 
 void Init_rbcluster() {
   Cluster = rb_define_module("Cluster");
-  rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, 2);
+  rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, -1);
 }
