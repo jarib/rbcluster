@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Cluster do
-  it "should run kmeans for the given data" do
+describe "Cluster.kcluster" do
+  it "should run kcluster for the given data" do
     nclusters = 3
     # First data set
     weight = [1,1,1,1,1]
@@ -31,7 +31,7 @@ describe Cluster do
     end
   end
 
-  it "should run kmeans for a second set of data" do
+  it "should run kcluster for a second set of data" do
     nclusters = 3
     weight = [1,1]
     data = [ [ 1.1, 1.2 ],
@@ -84,11 +84,11 @@ describe Cluster do
       Cluster.kcluster [[1,2,3], [1,2,3,4]], {}
     }.should raise_error(ArgumentError, "expected 3 columns, row has 4")
   end
-  
+
   it "will use default options" do
     data = [[1,1,1], [10,10,0], [0,0,0]]
     clusterids, error, nfound = Cluster.kcluster(data, :passes => 1000)
-    
+
     clusterids.should be_kind_of(Array)
     [[0, 1, 0], [1, 0, 1]].should include(clusterids)
   end

@@ -107,12 +107,6 @@ VALUE rbcluster_ints2rb(int* ints, long rows) {
 
 /*
   TODO: docs.
-
-  ‘c’	Pearson correlation coefficient;
-  ‘a’	Absolute value of the Pearson correlation coefficient;
-  ‘u’	Uncentered Pearson correlation (equivalent to the cosine of the angle between two data vectors);
-  ‘x’	Absolute uncentered Pearson correlation; ‘s’	Spearman’s rank correlation; ‘k’	Kendall’s	τ ; ‘e’	Euclidean distance;
-  ‘b’	City-block distance.
 */
 
 VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
@@ -217,7 +211,48 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
 }
 
+VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
+  rb_raise(rb_eNotImpError, "not yet implemented");
+}
+
+VALUE rbcluster_median(VALUE self, VALUE ary) {
+  Check_Type(ary, T_ARRAY);
+
+  long len = RARRAY_LEN(ary);
+  double arr[len];
+  int i;
+  VALUE num;
+
+  for(i = 0; i < len; ++i) {
+    num = rb_ary_entry(ary, i);
+    arr[i] = NUM2DBL(num);
+  }
+
+  return DBL2NUM(median(len, arr));
+}
+
+VALUE rbcluster_mean(VALUE self, VALUE ary) {
+  Check_Type(ary, T_ARRAY);
+
+  long len = RARRAY_LEN(ary);
+  double arr[len];
+  int i;
+  VALUE num;
+
+  for(i = 0; i < len; ++i) {
+    num = rb_ary_entry(ary, i);
+    arr[i] = NUM2DBL(num);
+  }
+
+  return DBL2NUM(mean(len, arr));
+}
+
 void Init_rbcluster() {
   Cluster = rb_define_module("Cluster");
+
+  rb_define_singleton_method(Cluster, "median", rbcluster_median, 1);
+  rb_define_singleton_method(Cluster, "mean", rbcluster_mean, 1);
+
   rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, -1);
+  rb_define_singleton_method(Cluster, "kmedoids", rbcluster_kmedoids, -1);
 }
