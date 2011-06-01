@@ -6,23 +6,23 @@ describe Cluster do
     # First data set
     weight = [1,1,1,1,1]
     data   = [[ 1.1, 2.2, 3.3, 4.4, 5.5],
-              [ 3.1, 3.2, 1.3, 2.4, 1.5], 
-              [ 4.1, 2.2, 0.3, 5.4, 0.5], 
+              [ 3.1, 3.2, 1.3, 2.4, 1.5],
+              [ 4.1, 2.2, 0.3, 5.4, 0.5],
               [12.1, 2.0, 0.0, 5.0, 0.0]]
-    mask   = [[ 1, 1, 1, 1, 1], 
-             [ 1, 1, 1, 1, 1], 
-             [ 1, 1, 1, 1, 1], 
+    mask   = [[ 1, 1, 1, 1, 1],
+             [ 1, 1, 1, 1, 1],
+             [ 1, 1, 1, 1, 1],
              [ 1, 1, 1, 1, 1]]
-  
-  
-    clusterids = Cluster.kcluster data, :clusters  => nclusters, 
-                                        :mask      => mask, 
-                                        :weight    => weight,
-                                        :transpose => false, 
-                                        :passes    => 100, 
-                                        :method    => 'a', 
-                                        :dist      => 'e'
-  
+
+
+    clusterids, error, nfound = Cluster.kcluster data, :clusters  => nclusters,
+                                                       :mask      => mask,
+                                                       :weight    => weight,
+                                                       :transpose => false,
+                                                       :passes    => 100,
+                                                       :method    => 'a',
+                                                       :dist      => 'e'
+
     clusterids.size.should == data.size
     correct = [0,1,1,2]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
@@ -30,7 +30,7 @@ describe Cluster do
       ci.should == mapping[correct[i]]
     end
   end
-  
+
   it "should run kmeans for a second set of data" do
     nclusters = 3
     weight = [1,1]
@@ -47,7 +47,7 @@ describe Cluster do
              [ 5.1, 5.5 ],
              [ 5.0, 5.5 ],
              [ 5.1, 5.2 ]]
-             
+
     mask = [ [ 1, 1 ],
              [ 1, 1 ],
              [ 1, 1 ],
@@ -61,21 +61,28 @@ describe Cluster do
              [ 1, 1 ],
              [ 1, 1 ],
              [ 1, 1 ]]
-    
-    clusterids = Cluster.kcluster data, :clusters  => nclusters,
-                                        :mask      => mask,
-                                        :weight    => weight,
-                                        :transpose => false,
-                                        :passes    => 100,
-                                        :method    => 'a',
-                                        :dist      => 'e'
-    
+
+    clusterids, error, nfound = Cluster.kcluster data, :clusters  => nclusters,
+                                                       :mask      => mask,
+                                                       :weight    => weight,
+                                                       :transpose => false,
+                                                       :passes    => 100,
+                                                       :method    => 'a',
+                                                       :dist      => 'e'
+
     clusterids.size.should == data.size
-    
+
     correct = [0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
     clusterids.each_with_index do |ci, i|
       ci.should == mapping[correct[i]]
     end
+  end
+
+  it "raises ArgumentError if passed inconsistent data" do
+    lambda {
+      Cluster.kcluster [[1,2,3], [1,2,3,4]], {}
+    }.should raise_error(ArgumentError, "expected 3 columns, row has 4")
+
   end
 end
