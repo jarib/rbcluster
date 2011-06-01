@@ -153,13 +153,13 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
     VALUE val;
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("clusters")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       Check_Type(val, T_FIXNUM);
       nclusters = FIX2INT(val);
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("mask")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       Check_Type(val, T_ARRAY);
       VALUE row;
 
@@ -173,30 +173,31 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("weight")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       free(weight);
       weight = rbcluster_ary_to_doubles(val, ncols);
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("transpose")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       transpose = val ? 1 : 0;
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("passes")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
+      rb_inspect(val);
       Check_Type(val, T_FIXNUM);
       npass = FIX2INT(val);
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("method")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       Check_Type(val, T_STRING);
       method = RSTRING_PTR(val)[0];
     }
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("dist")));
-    if(TYPE(val) != Qnil) {
+    if(val != Qnil) {
       Check_Type(val, T_STRING);
       dist = RSTRING_PTR(val)[0];
     }
