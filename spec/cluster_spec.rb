@@ -15,19 +15,24 @@ describe Cluster do
              [ 1, 1, 1, 1, 1]]
   
   
-    clusterid = Cluster.kcluster data, :clusters  => nclusters, 
-                                       :mask      => mask, 
-                                       :weight    => weight,
-                                       :transpose => false, 
-                                       :passes    => 100, 
-                                       :method    => 'a', 
-                                       :dist      => 'e'
+    clusterids = Cluster.kcluster data, :clusters  => nclusters, 
+                                        :mask      => mask, 
+                                        :weight    => weight,
+                                        :transpose => false, 
+                                        :passes    => 100, 
+                                        :method    => 'a', 
+                                        :dist      => 'e'
   
-    clusterid.size.should == data.size
-    clusterid.sort.should == [0,1,1,2]
+    clusterids.size.should == data.size
+    correct = [0,1,1,2]
+    mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
+    clusterids.each_with_index do |ci, i|
+      ci.should == mapping[correct[i]]
+    end
   end
   
   it "should run kmeans for a second set of data" do
+    nclusters = 3
     weight = [1,1]
     data = [ [ 1.1, 1.2 ],
              [ 1.4, 1.3 ],
@@ -57,17 +62,20 @@ describe Cluster do
              [ 1, 1 ],
              [ 1, 1 ]]
     
-    clusterid = Cluster.kcluster data, :clusters  => 3,
-                                       :mask      => mask,
-                                       :weight    => weight,
-                                       :transpose => false,
-                                       :passes    => 100,
-                                       :method    => 'a',
-                                       :dist      => 'e'
+    clusterids = Cluster.kcluster data, :clusters  => nclusters,
+                                        :mask      => mask,
+                                        :weight    => weight,
+                                        :transpose => false,
+                                        :passes    => 100,
+                                        :method    => 'a',
+                                        :dist      => 'e'
     
-    clusterid.size.should == data.size
+    clusterids.size.should == data.size
     
     correct = [0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1]
-    clusterid.sort.should == correct.sort
+    mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
+    clusterids.each_with_index do |ci, i|
+      ci.should == mapping[correct[i]]
+    end
   end
 end
