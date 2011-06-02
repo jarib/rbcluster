@@ -7,7 +7,7 @@
 
 VALUE Cluster = Qnil;
 
-VALUE rbcluster_data2rb(double** data, int nrows, int ncols) {
+VALUE rbcluster_rows2rb(double** data, int nrows, int ncols) {
   VALUE rows = rb_ary_new2((long)nrows);
   VALUE cols;
   int i, j;
@@ -41,7 +41,7 @@ double* rbcluster_ary_to_doubles(VALUE data, int len) {
 
 double** rbcluster_ary_to_rows(VALUE data, int* nrows, int* ncols) {
   Check_Type(data, T_ARRAY);
-  int rows, cols;
+  long rows, cols;
 
   rows = RARRAY_LEN(data);
   if(rows == 0) {
@@ -63,7 +63,7 @@ double** rbcluster_ary_to_rows(VALUE data, int* nrows, int* ncols) {
 
     Check_Type(row, T_ARRAY);
     if(RARRAY_LEN(row) != cols) {
-      rb_raise(rb_eArgError, "expected %d columns, row has %ld", cols, RARRAY_LEN(row));
+      rb_raise(rb_eArgError, "expected %ld columns, row has %ld", cols, RARRAY_LEN(row));
     }
 
     for(j = 0; j < cols; ++j) {
@@ -71,19 +71,33 @@ double** rbcluster_ary_to_rows(VALUE data, int* nrows, int* ncols) {
     }
   }
 
-  *nrows = rows;
-  *ncols = cols;
+  *nrows = (int)rows;
+  *ncols = (int)cols;
 
   return result;
 }
 
-void rbcluster_free_doubles(double** data, int nrows) {
+void rbcluster_free_rows(double** data, int nrows) {
   int i;
   for(i = 0; i < nrows; ++i) {
     free(data[i]);
   }
 
   free(data);
+}
+
+int** rbcluster_create_mask(int nrows, int ncols) {
+  int** mask = malloc(nrows*sizeof(int*));
+  int i, n;
+
+  for(i = 0; i < nrows; ++i) {
+    mask[i] = malloc(ncols*sizeof(int));
+    for(n = 0; n < ncols; ++n) {
+      mask[i][n] = 1;
+    }
+  }
+
+  return mask;
 }
 
 void rbcluster_free_mask(int** mask, int nrows) {
@@ -93,6 +107,16 @@ void rbcluster_free_mask(int** mask, int nrows) {
     free(mask[i]);
   }
   free(mask);
+}
+
+double* rbcluster_create_weight(int ncols) {
+  int i;
+  double* weight = malloc(ncols*sizeof(double));
+
+  for (i = 0; i < ncols; i++)
+    weight[i] = 1.0;
+
+  return weight;
 }
 
 VALUE rbcluster_ints2rb(int* ints, long rows) {
@@ -106,6 +130,40 @@ VALUE rbcluster_ints2rb(int* ints, long rows) {
 }
 
 /*
+  option hash parsing
+*/
+
+void rbcluster_parse_mask(VALUE opts, int** mask, int nrows, int ncols) {
+  VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern("mask")));
+
+  if(NIL_P(val))
+    return;
+
+  // TODO: better error message
+  Check_Type(val, T_ARRAY);
+  VALUE row;
+  int i, j;
+
+  for(i = 0; i < nrows; ++i) {
+    row = rb_ary_entry(val, i);
+    Check_Type(row, T_ARRAY);
+    for(j = 0; j < ncols; ++j) {
+      mask[i][j] = FIX2INT(rb_ary_entry(row, j));
+    }
+  }
+}
+
+void rbcluster_parse_weight(VALUE opts, double** weight, int ncols) {
+  VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern("weight")));
+
+  if(NIL_P(val))
+    return;
+
+  free(*weight);
+  *weight = rbcluster_ary_to_doubles(val, ncols);
+}
+
+/*
   TODO: docs.
 */
 
@@ -114,32 +172,22 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
 
   rb_scan_args(argc, argv, "11", &arr, &opts);
 
-  int nrows, ncols;
-  double** data = rbcluster_ary_to_rows(arr, &nrows, &ncols);
-  int** mask = malloc(nrows*sizeof(int*));
+  int nrows, ncols, i, j;
 
-  int i, n;
-  for(i = 0; i < nrows; ++i) {
-    mask[i] = malloc(ncols*sizeof(int));
-    for(n = 0; n < ncols; ++n) {
-      mask[i][n] = 1;
-    }
-  }
+  double** data = rbcluster_ary_to_rows(arr, &nrows, &ncols);
+  int** mask    = rbcluster_create_mask(nrows, ncols);
 
   // defaults
   int nclusters = 2;
   int transpose = 0;
-  int npass = 1;
-  int ifound = 0;
+  int npass     = 1;
+  int ifound    = 0;
   double error;
-  char method = 'a';
-  char dist = 'e';
+  char method   = 'a';
+  char dist     = 'e';
+  double* weight = rbcluster_create_weight(nrows);
 
-  double* weight = malloc(ncols*sizeof(double));
   int* clusterid = malloc(nrows*sizeof(int));
-
-  for (i = 0; i < ncols; i++)
-    weight[i] = 1.0;
 
   // options
   if(opts != Qnil) {
@@ -152,25 +200,8 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
       nclusters = FIX2INT(val);
     }
 
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("mask")));
-    if(val != Qnil) {
-      Check_Type(val, T_ARRAY);
-      VALUE row;
-
-      for(i = 0; i < nrows; ++i) {
-        row = rb_ary_entry(val, i);
-        Check_Type(row, T_ARRAY);
-        for(n = 0; n < ncols; ++n) {
-          mask[i][n] = FIX2INT(rb_ary_entry(row, n));
-        }
-      }
-    }
-
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("weight")));
-    if(val != Qnil) {
-      free(weight);
-      weight = rbcluster_ary_to_doubles(val, ncols);
-    }
+    rbcluster_parse_mask(opts, mask, nrows, ncols);
+    rbcluster_parse_weight(opts, &weight, ncols);
 
     val = rb_hash_aref(opts, ID2SYM(rb_intern("transpose")));
     if(val != Qnil) {
@@ -202,7 +233,7 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
 
   VALUE result = rbcluster_ints2rb(clusterid, nrows);
 
-  rbcluster_free_doubles(data, nrows);
+  rbcluster_free_rows(data, nrows);
   rbcluster_free_mask(mask, nrows);
 
   free(weight);
@@ -228,7 +259,7 @@ VALUE rbcluster_median(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return DBL2NUM(median(len, arr));
+  return DBL2NUM(median((int)len, arr));
 }
 
 VALUE rbcluster_mean(VALUE self, VALUE ary) {
@@ -244,7 +275,59 @@ VALUE rbcluster_mean(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return DBL2NUM(mean(len, arr));
+  return DBL2NUM(mean((int)len, arr));
+}
+
+VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
+  VALUE data, opts;
+  int nrows, ncols, i, j;
+
+  rb_scan_args(argc, argv, "11", &data, &opts);
+  double** rows = rbcluster_ary_to_rows(data, &nrows, &ncols);
+
+  char dist      = 'e';
+  int transpose  = 0;
+  int** mask     = rbcluster_create_mask(nrows, ncols);
+  double* weight = rbcluster_create_weight(ncols);
+
+  if(opts != Qnil) {
+    Check_Type(opts, T_HASH);
+    VALUE val;
+
+    rbcluster_parse_mask(opts, mask, nrows, ncols);
+    rbcluster_parse_weight(opts, &weight, ncols);
+
+    // TODO: dist
+    // TODO: transpose
+  }
+
+
+  VALUE result = Qnil;
+  double** distances = distancematrix(nrows, ncols, rows, mask, weight, dist, transpose);
+
+  if(distances) {
+    result = rb_ary_new();
+    for(i = 0; i < nrows; ++i) {
+      VALUE row = rb_ary_new();
+
+      for(j = 0; j < i; ++j){
+        rb_ary_push(row, DBL2NUM(distances[i][j]));
+      }
+
+        // first row is NULL
+      if(i != 0) {
+        free(distances[i]);
+      }
+
+      rb_ary_push(result, row);
+    }
+  }
+
+  free(weight);
+  rbcluster_free_rows(rows, nrows);
+  rbcluster_free_mask(mask, nrows);
+
+  return result;
 }
 
 void Init_rbcluster() {
@@ -254,5 +337,8 @@ void Init_rbcluster() {
   rb_define_singleton_method(Cluster, "mean", rbcluster_mean, 1);
 
   rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, -1);
+  rb_define_singleton_method(Cluster, "distancematrix", rbcluster_distancematrix, -1);
   rb_define_singleton_method(Cluster, "kmedoids", rbcluster_kmedoids, -1);
+
+  rb_define_const(Cluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
 }
