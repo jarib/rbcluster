@@ -418,8 +418,6 @@ VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
     rbcluster_parse_char(opts, "method", &method);
     rbcluster_parse_bool(opts, "transpose", &transpose);
   }
-  // options parsing
-
 
   double result = clusterdistance(
     nrows,
