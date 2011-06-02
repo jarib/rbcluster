@@ -6,20 +6,21 @@ Ruby bindings to the Cluster C library.
 TODO
 ----
 
-* treecluster
-* somcluster
-* clusterdistance
-* clustercentroids
-* pca
+* Cluster.treecluster
+* Cluster.somcluster
+* Cluster.clustercentroids
+* Cluster.pca
+* an examples/ folder
 
 DONE
 ----
 
-- kcluster
-- kmedoids
-- distancematrix
-* median
-* mean
+* Cluster.clusterdistance
+* Cluster.kcluster
+* Cluster.kmedoids
+* Cluster.distancematrix
+* Cluster.median
+* Cluster.mean
 
 See also
 --------

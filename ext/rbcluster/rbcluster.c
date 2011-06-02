@@ -78,21 +78,18 @@ double** rbcluster_ary_to_rows(VALUE data, int* nrows, int* ncols) {
 }
 
 void rbcluster_free_rows(double** data, int nrows) {
-  int i;
-  for(i = 0; i < nrows; ++i) {
+  for(int i = 0; i < nrows; ++i)
     free(data[i]);
-  }
 
   free(data);
 }
 
 int** rbcluster_create_mask(int nrows, int ncols) {
   int** mask = malloc(nrows*sizeof(int*));
-  int i, n;
 
-  for(i = 0; i < nrows; ++i) {
+  for(int i = 0; i < nrows; ++i) {
     mask[i] = malloc(ncols*sizeof(int));
-    for(n = 0; n < ncols; ++n) {
+    for(int n = 0; n < ncols; ++n) {
       mask[i][n] = 1;
     }
   }
@@ -101,19 +98,16 @@ int** rbcluster_create_mask(int nrows, int ncols) {
 }
 
 void rbcluster_free_mask(int** mask, int nrows) {
-  int i;
-
-  for(i = 0; i < nrows; ++i) {
+  for(int i = 0; i < nrows; ++i)
     free(mask[i]);
-  }
+
   free(mask);
 }
 
 double* rbcluster_create_weight(int ncols) {
-  int i;
   double* weight = malloc(ncols*sizeof(double));
 
-  for (i = 0; i < ncols; i++)
+  for (int i = 0; i < ncols; i++)
     weight[i] = 1.0;
 
   return weight;
@@ -121,13 +115,14 @@ double* rbcluster_create_weight(int ncols) {
 
 VALUE rbcluster_ints2rb(int* ints, long rows) {
   VALUE ary = rb_ary_new2(rows);
-  int i;
-  for(i = 0; i < rows; ++i) {
+
+  for(int i = 0; i < rows; ++i) {
     rb_ary_push(ary, INT2FIX(ints[i]));
   }
 
   return ary;
 }
+
 
 /*
   option hash parsing
@@ -187,7 +182,7 @@ void rbcluster_parse_bool(VALUE opts, const char* key, int* out) {
 
 
 /*
-  TODO: docs.
+  main function
 */
 
 VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
@@ -203,13 +198,13 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   int nclusters = 2;
   int transpose = 0;
   int npass     = 1;
-  int ifound    = 0;
-  double error;
   char method   = 'a';
   char dist     = 'e';
   double* weight = rbcluster_create_weight(nrows);
 
   int* clusterid = malloc(nrows*sizeof(int));
+  int ifound    = 0;
+  double error;
 
   // options
   if(opts != Qnil) {
@@ -350,7 +345,15 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
   }
 
   VALUE result = Qnil;
-  double** distances = distancematrix(nrows, ncols, rows, mask, weight, dist, transpose);
+  double** distances = distancematrix(
+    nrows,
+    ncols,
+    rows,
+    mask,
+    weight,
+    dist,
+    transpose
+  );
 
   if(distances) {
     result = rb_ary_new();
@@ -377,6 +380,71 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
   return result;
 }
 
+int* rbcluster_parse_index(VALUE arr, int* len) {
+  Check_Type(arr, T_ARRAY);
+  long length = RARRAY_LEN(arr);
+
+  int* result = malloc(length*sizeof(int));
+
+  for(int i = 0; i < length; ++i) {
+    result[i] = FIX2INT(rb_ary_entry(arr, i));
+  }
+
+  *len = (int)length;
+  return result;
+}
+
+VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
+  VALUE data, index1, index2, opts;
+  int nrows, ncols;
+
+  rb_scan_args(argc, argv, "31", &data, &index1, &index2, &opts);
+  double** rows = rbcluster_ary_to_rows(data, &nrows, &ncols);
+
+  int nidx1, nidx2;
+  int* idx1 = rbcluster_parse_index(index1, &nidx1);
+  int* idx2 = rbcluster_parse_index(index2, &nidx2);
+
+  int** mask = rbcluster_create_mask(nrows, ncols);
+  double* weight = rbcluster_create_weight(ncols);
+  char method = 'a';
+  char dist = 'e';
+  int transpose = 0;
+
+  if(opts != Qnil) {
+    rbcluster_parse_mask(opts, mask, nrows, ncols);
+    rbcluster_parse_weight(opts, &weight, ncols);
+    rbcluster_parse_char(opts, "dist", &dist);
+    rbcluster_parse_char(opts, "method", &method);
+    rbcluster_parse_bool(opts, "transpose", &transpose);
+  }
+  // options parsing
+
+
+  double result = clusterdistance(
+    nrows,
+    ncols,
+    rows,
+    mask,
+    weight,
+    nidx1,
+    nidx2,
+    idx1,
+    idx2,
+    dist,
+    method,
+    transpose
+  );
+
+  free(weight);
+  free(idx1);
+  free(idx2);
+  rbcluster_free_rows(rows, nrows);
+  rbcluster_free_mask(mask, nrows);
+
+  return DBL2NUM(result);
+}
+
 void Init_rbcluster() {
   Cluster = rb_define_module("Cluster");
 
@@ -386,6 +454,7 @@ void Init_rbcluster() {
   rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, -1);
   rb_define_singleton_method(Cluster, "distancematrix", rbcluster_distancematrix, -1);
   rb_define_singleton_method(Cluster, "kmedoids", rbcluster_kmedoids, -1);
+  rb_define_singleton_method(Cluster, "clusterdistance", rbcluster_clusterdistance, -1);
 
   rb_define_const(Cluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
 }
