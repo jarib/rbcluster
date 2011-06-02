@@ -29,8 +29,7 @@ double* rbcluster_ary_to_doubles(VALUE data, int len) {
   }
 
   double* result = malloc(len*sizeof(double));
-  int i;
-  for(i = 0; i < len; ++i) {
+  for(int i = 0; i < len; ++i) {
     result[i] = NUM2DBL(rb_ary_entry(data, i));
   }
 
@@ -218,8 +217,21 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
     rbcluster_parse_char(opts, "dist", &dist);
   }
 
-  kcluster(nclusters, nrows, ncols, data, mask, weight,
-    transpose, npass, method, dist, clusterid, &error, &ifound);
+  kcluster(
+    nclusters,
+    nrows,
+    ncols,
+    data,
+    mask,
+    weight,
+    transpose,
+    npass,
+    method,
+    dist,
+    clusterid,
+    &error,
+    &ifound
+  );
 
   VALUE result = rbcluster_ints2rb(clusterid, nrows);
 
@@ -279,7 +291,15 @@ VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
 
   // void kmedoids (int nclusters, int nelements, double** distance,
   //   int npass, int clusterid[], double* error, int* ifound);
-  kmedoids(nclusters, nitems, distances, npass, clusterid, &error, &ifound);
+  kmedoids(
+    nclusters,
+    nitems,
+    distances,
+    npass,
+    clusterid,
+    &error,
+    &ifound
+  );
 
   VALUE result = rbcluster_ints2rb(clusterid, nitems);
   free(clusterid);
