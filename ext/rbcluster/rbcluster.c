@@ -5,7 +5,8 @@
 #include "ruby.h"
 #include "cluster.h"
 
-VALUE Cluster = Qnil;
+VALUE rbcluster_mCluster = Qnil;
+VALUE rbcluster_cNode = Qnil;
 
 VALUE rbcluster_rows2rb(double** data, int nrows, int ncols) {
   VALUE rows = rb_ary_new2((long)nrows);
@@ -443,16 +444,86 @@ VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
   return DBL2NUM(result);
 }
 
+VALUE rbcluster_create_node(Node* node) {
+  VALUE result = rb_class_new_instance(0, NULL, rbcluster_cNode);
+
+  rb_ivar_set(result, rb_intern("@left"), INT2NUM(node->left));
+  rb_ivar_set(result, rb_intern("@right"), INT2NUM(node->right));
+  rb_ivar_set(result, rb_intern("@distance"), DBL2NUM(node->distance));
+
+  return result;
+}
+
+VALUE rbcluster_treecluster(int argc, VALUE* argv, VALUE self) {
+  VALUE data, opts;
+  rb_scan_args(argc, argv, "11", &data, &opts);
+
+  int nrows, ncols;
+  double** rows = rbcluster_ary_to_rows(data, &nrows, &ncols);
+
+  int** mask = rbcluster_create_mask(nrows, ncols);
+  double* weight = rbcluster_create_weight(ncols);
+  int transpose = 0;
+  char dist = 'e';
+  char method = 'a';
+
+   // TODO: allow passing a distance matrix instead of data.
+  double** distmatrix = NULL;
+
+  // options
+  if(opts != Qnil) {
+    rbcluster_parse_mask(opts, mask, nrows, ncols);
+    rbcluster_parse_weight(opts, &weight, ncols);
+    rbcluster_parse_char(opts, "dist", &dist);
+    rbcluster_parse_char(opts, "method", &method);
+    rbcluster_parse_bool(opts, "transpose", &transpose);
+
+    if(TYPE(opts) == T_HASH && rb_hash_aref(opts, ID2SYM(rb_intern("distancematrix"))) != Qnil) {
+      rb_raise(rb_eNotImpError, "passing a distance matrix to treecluster() is not yet implemented");
+    }
+  }
+
+  Node* tree = treecluster(
+    nrows,
+    ncols,
+    rows,
+    mask,
+    weight,
+    transpose,
+    dist,
+    method,
+    distmatrix
+  );
+
+  VALUE result = rb_ary_new2(nrows - 1);
+  for(int i = 0; i < nrows - 1; ++i) {
+    rb_ary_push(result, rbcluster_create_node(&tree[i]));
+  }
+
+  free(tree);
+  free(weight);
+  rbcluster_free_rows(rows, nrows);
+  rbcluster_free_mask(mask, nrows);
+
+  return result;
+}
+
 void Init_rbcluster() {
-  Cluster = rb_define_module("Cluster");
+  rbcluster_mCluster = rb_define_module("Cluster");
+  rbcluster_cNode = rb_define_class_under(rbcluster_mCluster, "Node", rb_cObject);
 
-  rb_define_singleton_method(Cluster, "median", rbcluster_median, 1);
-  rb_define_singleton_method(Cluster, "mean", rbcluster_mean, 1);
+  rb_define_attr(rbcluster_cNode, "left", 1, 0);
+  rb_define_attr(rbcluster_cNode, "right", 1, 0);
+  rb_define_attr(rbcluster_cNode, "distance", 1, 0);
 
-  rb_define_singleton_method(Cluster, "kcluster", rbcluster_kcluster, -1);
-  rb_define_singleton_method(Cluster, "distancematrix", rbcluster_distancematrix, -1);
-  rb_define_singleton_method(Cluster, "kmedoids", rbcluster_kmedoids, -1);
-  rb_define_singleton_method(Cluster, "clusterdistance", rbcluster_clusterdistance, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "median", rbcluster_median, 1);
+  rb_define_singleton_method(rbcluster_mCluster, "mean", rbcluster_mean, 1);
 
-  rb_define_const(Cluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
+  rb_define_singleton_method(rbcluster_mCluster, "kcluster", rbcluster_kcluster, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "distancematrix", rbcluster_distancematrix, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "kmedoids", rbcluster_kmedoids, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "clusterdistance", rbcluster_clusterdistance, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "treecluster", rbcluster_treecluster, -1);
+
+  rb_define_const(rbcluster_mCluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
 }

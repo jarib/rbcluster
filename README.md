@@ -6,7 +6,6 @@ Ruby bindings to the Cluster C library.
 TODO
 ----
 
-* Cluster.treecluster
 * Cluster.somcluster
 * Cluster.clustercentroids
 * Cluster.pca
@@ -15,6 +14,7 @@ TODO
 DONE
 ----
 
+* Cluster.treecluster
 * Cluster.clusterdistance
 * Cluster.kcluster
 * Cluster.kmedoids
