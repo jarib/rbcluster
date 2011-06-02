@@ -3,6 +3,24 @@ rbcluster
 
 Ruby bindings to the Cluster C library.
 
+TODO
+----
+
+* treecluster
+* somcluster
+* clusterdistance
+* clustercentroids
+* pca
+
+DONE
+----
+
+- kcluster
+- kmedoids
+- distancematrix
+* median
+* mean
+
 See also
 --------
 

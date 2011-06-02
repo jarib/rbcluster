@@ -156,12 +156,35 @@ void rbcluster_parse_mask(VALUE opts, int** mask, int nrows, int ncols) {
 void rbcluster_parse_weight(VALUE opts, double** weight, int ncols) {
   VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern("weight")));
 
-  if(NIL_P(val))
-    return;
-
-  free(*weight);
-  *weight = rbcluster_ary_to_doubles(val, ncols);
+  if(val != Qnil) {
+    free(*weight);
+    *weight = rbcluster_ary_to_doubles(val, ncols);
+  }
 }
+
+void rbcluster_parse_int(VALUE opts, const char* key, int* out) {
+  VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern(key)));
+  if(val != Qnil) {
+    Check_Type(val, T_FIXNUM);
+    *out = FIX2INT(val);
+  }
+}
+
+void rbcluster_parse_char(VALUE opts, const char* key, char* out) {
+  VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern(key)));
+  if(val != Qnil) {
+    Check_Type(val, T_STRING);
+    *out = RSTRING_PTR(val)[0];
+  }
+}
+
+void rbcluster_parse_bool(VALUE opts, const char* key, int* out) {
+  VALUE val = rb_hash_aref(opts, ID2SYM(rb_intern(key)));
+  if(val != Qnil) {
+    *out = val ? 1 : 0;
+  }
+}
+
 
 /*
   TODO: docs.
@@ -169,10 +192,9 @@ void rbcluster_parse_weight(VALUE opts, double** weight, int ncols) {
 
 VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   VALUE arr, opts;
+  int nrows, ncols, i, j;
 
   rb_scan_args(argc, argv, "11", &arr, &opts);
-
-  int nrows, ncols, i, j;
 
   double** data = rbcluster_ary_to_rows(arr, &nrows, &ncols);
   int** mask    = rbcluster_create_mask(nrows, ncols);
@@ -194,38 +216,13 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
     Check_Type(opts, T_HASH);
     VALUE val;
 
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("clusters")));
-    if(val != Qnil) {
-      Check_Type(val, T_FIXNUM);
-      nclusters = FIX2INT(val);
-    }
-
+    rbcluster_parse_int(opts, "clusters", &nclusters);
     rbcluster_parse_mask(opts, mask, nrows, ncols);
     rbcluster_parse_weight(opts, &weight, ncols);
-
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("transpose")));
-    if(val != Qnil) {
-      transpose = val ? 1 : 0;
-    }
-
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("passes")));
-    if(val != Qnil) {
-      rb_inspect(val);
-      Check_Type(val, T_FIXNUM);
-      npass = FIX2INT(val);
-    }
-
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("method")));
-    if(val != Qnil) {
-      Check_Type(val, T_STRING);
-      method = RSTRING_PTR(val)[0];
-    }
-
-    val = rb_hash_aref(opts, ID2SYM(rb_intern("dist")));
-    if(val != Qnil) {
-      Check_Type(val, T_STRING);
-      dist = RSTRING_PTR(val)[0];
-    }
+    rbcluster_parse_bool(opts, "transpose", &transpose);
+    rbcluster_parse_int(opts, "passes", &npass);
+    rbcluster_parse_char(opts, "method", &method);
+    rbcluster_parse_char(opts, "dist", &dist);
   }
 
   kcluster(nclusters, nrows, ncols, data, mask, weight,
@@ -243,7 +240,59 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
 }
 
 VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
-  rb_raise(rb_eNotImpError, "not yet implemented");
+  VALUE data, opts;
+
+  rb_scan_args(argc, argv, "11", &data, &opts);
+  Check_Type(data, T_ARRAY);
+
+  int nitems = (int)RARRAY_LEN(data);
+  int nclusters = 2;
+  int npass = 1;
+
+  // populate 'distances' from the input Array
+  double** distances = malloc(nitems*sizeof(double*));
+  int i, j;
+  VALUE row, num;
+
+  for(i = 0; i < nitems; ++i) {
+    row = rb_ary_entry(data, i);
+    // TODO: better error message
+    Check_Type(row, T_ARRAY);
+    if(RARRAY_LEN(row) != i) {
+      rb_raise(rb_eArgError,
+        "expected row %d to have exactly %d elements, got %ld", i, i, RARRAY_LEN(row));
+    }
+
+    if(i == 0) {
+      distances[i] = NULL;
+    } else {
+      distances[i] = malloc(i*sizeof(double));
+    }
+
+    for(j = 0; j < i; ++j) {
+      distances[i][j] = NUM2DBL(rb_ary_entry(row, j));
+    }
+  }
+
+  if(opts != Qnil) {
+    rbcluster_parse_int(opts, "clusters", &nclusters);
+    rbcluster_parse_int(opts, "passes", &npass);
+    // TODO: initialid
+  }
+
+  int* clusterid = malloc(nitems*sizeof(int));
+  double error;
+  int ifound;
+
+  // void kmedoids (int nclusters, int nelements, double** distance,
+  //   int npass, int clusterid[], double* error, int* ifound);
+  kmedoids(nclusters, nitems, distances, npass, clusterid, &error, &ifound);
+
+  VALUE result = rbcluster_ints2rb(clusterid, nitems);
+  free(clusterid);
+  for(i = 1; i < nitems; ++i) free(distances[i]);
+
+  return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
 }
 
 VALUE rbcluster_median(VALUE self, VALUE ary) {
@@ -296,11 +345,9 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
 
     rbcluster_parse_mask(opts, mask, nrows, ncols);
     rbcluster_parse_weight(opts, &weight, ncols);
-
-    // TODO: dist
-    // TODO: transpose
+    rbcluster_parse_char(opts, "dist", &dist);
+    rbcluster_parse_bool(opts, "transpose", &transpose);
   }
-
 
   VALUE result = Qnil;
   double** distances = distancematrix(nrows, ncols, rows, mask, weight, dist, transpose);
@@ -314,7 +361,7 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
         rb_ary_push(row, DBL2NUM(distances[i][j]));
       }
 
-        // first row is NULL
+      // first row is NULL
       if(i != 0) {
         free(distances[i]);
       }
