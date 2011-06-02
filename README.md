@@ -9,7 +9,10 @@ TODO
 * Cluster.somcluster
 * Cluster.clustercentroids
 * Cluster.pca
+
 * an examples/ folder
+* make :transpose work
+* specs for bad inputs
 
 DONE
 ----
