@@ -9,7 +9,7 @@ describe "Cluster.somcluster" do
       [  3.1, 3.2, 1.3, 2.4, 1.5],
       [  4.1, 2.2, 0.3, 5.4, 0.5],
       [ 12.1, 2.0, 0.0, 5.0, 0.0]
-    
+
     ]
     mask = [
       [ 1, 1, 1, 1, 1],
@@ -18,7 +18,7 @@ describe "Cluster.somcluster" do
       [ 1, 1, 1, 1, 1]
     ]
 
-    clusterid, celldata = Cluster.somcluster data, :mask      => mask, 
+    clusterid, celldata = Cluster.somcluster data, :mask      => mask,
                                                    :weight    => weight,
                                                    :transpose => false,
                                                    :nxgrid    => 10,
@@ -26,9 +26,10 @@ describe "Cluster.somcluster" do
                                                    :inittau   => 0.02,
                                                    :niter     => 100,
                                                    :dist      => 'e'
-                                                   
+
    clusterid.size.should == data.size
-   clusterid[0].should == 2
+   clusterid[0].size.should == 2
+   celldata[0][0].size.should == 5
   end
 
   it "calculates somcluster for a second data set" do
@@ -73,8 +74,8 @@ describe "Cluster.somcluster" do
                                                      :inittau   => 0.02,
                                                      :niter     => 100,
                                                      :dist      => 'e'
-
       clusterid.size.should == data.size
-      clusterid[0].should == 2
+      clusterid[0].size.should == 2
+      celldata[0][0].size.should == 2
   end
 end
