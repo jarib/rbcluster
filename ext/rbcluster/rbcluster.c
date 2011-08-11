@@ -249,7 +249,7 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   free(weight);
   free(clusterid);
 
-  return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
+  return rb_ary_new3(3, result, rb_float_new(error), INT2NUM(ifound));
 }
 
 VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
@@ -313,7 +313,7 @@ VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
   free(clusterid);
   for(i = 1; i < nitems; ++i) free(distances[i]);
 
-  return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
+  return rb_ary_new3(3, result, rb_float_new(error), INT2NUM(ifound));
 }
 
 VALUE rbcluster_median(VALUE self, VALUE ary) {
@@ -329,7 +329,7 @@ VALUE rbcluster_median(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return DBL2NUM(median((int)len, arr));
+  return rb_float_new(median((int)len, arr));
 }
 
 VALUE rbcluster_mean(VALUE self, VALUE ary) {
@@ -345,7 +345,7 @@ VALUE rbcluster_mean(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return DBL2NUM(mean((int)len, arr));
+  return rb_float_new(mean((int)len, arr));
 }
 
 VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
@@ -387,7 +387,7 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
       VALUE row = rb_ary_new();
 
       for(j = 0; j < i; ++j){
-        rb_ary_push(row, DBL2NUM(distances[i][j]));
+        rb_ary_push(row, rb_float_new(distances[i][j]));
       }
 
       // first row is NULL
@@ -466,7 +466,7 @@ VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
   rbcluster_free_rows(rows, nrows);
   rbcluster_free_mask(mask, nrows);
 
-  return DBL2NUM(result);
+  return rb_float_new(result);
 }
 
 VALUE rbcluster_create_node(Node* node) {
@@ -474,7 +474,7 @@ VALUE rbcluster_create_node(Node* node) {
 
   rb_ivar_set(result, rb_intern("@left"), INT2NUM(node->left));
   rb_ivar_set(result, rb_intern("@right"), INT2NUM(node->right));
-  rb_ivar_set(result, rb_intern("@distance"), DBL2NUM(node->distance));
+  rb_ivar_set(result, rb_intern("@distance"), rb_float_new(node->distance));
 
   return result;
 }
@@ -620,7 +620,7 @@ VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
     for(j = 0; j < nygrid; ++j) {
       jarr = rb_ary_new2(ncols);
       for(k = 0; k < ncols; ++k) {
-        rb_ary_push(jarr, DBL2NUM(celldata[i][j][k]));
+        rb_ary_push(jarr, rb_float_new(celldata[i][j][k]));
       }
       rb_ary_push(iarr, jarr);
     }
