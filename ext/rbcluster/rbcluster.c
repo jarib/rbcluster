@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "ruby.h"
 #include "cluster.h"
 
@@ -14,7 +15,7 @@ VALUE rbcluster_rows2rb(double** data, int nrows, int ncols) {
     cols = rb_ary_new2((long)ncols);
     rb_ary_push(rows, cols);
     for(j = 0; j < ncols; ++j) {
-      rb_ary_push(cols, rb_float_new(data[i][j]));
+      rb_ary_push(cols, DBL2NUM(data[i][j]));
     }
   }
 
@@ -110,11 +111,21 @@ double* rbcluster_create_weight(int ncols) {
   return weight;
 }
 
-VALUE rbcluster_ints2rb(int* ints, long rows) {
-  VALUE ary = rb_ary_new2(rows);
+VALUE rbcluster_ints2rb(int* ints, long nrows) {
+  VALUE ary = rb_ary_new2(nrows);
 
-  for(int i = 0; i < rows; ++i) {
+  for(int i = 0; i < nrows; ++i) {
     rb_ary_push(ary, INT2FIX(ints[i]));
+  }
+
+  return ary;
+}
+
+VALUE rbcluster_doubles2rb(double* arr, long nrows) {
+  VALUE ary = rb_ary_new2(nrows);
+
+  for(int i = 0; i < nrows; ++i) {
+    rb_ary_push(ary, DBL2NUM(arr[i]));
   }
 
   return ary;
@@ -644,6 +655,79 @@ VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
   return rb_ary_new3(2, rb_clusterid, rb_celldata);
 }
 
+void print_doubles(double* vals, int len) {
+  puts("[");
+  for(int i = 0; i < len; ++i) {
+    printf("\t%d: %f\n", i, vals[i]);
+  }
+  puts("]");
+}
+
+void print_double_matrix(double** vals, int nrows, int ncols) {
+  puts("[");
+  for(int i = 0; i < nrows; ++i) {
+    printf("\t[ ");
+    for(int j = 0; j < ncols; ++j) {
+      printf("%f%c", vals[i][j], j == ncols - 1 ? ' ' : ',');
+    }
+    printf("\t]\n");
+  }
+  puts("]");
+}
+
+VALUE rbcluster_pca(VALUE self, VALUE data) {
+  int nrows, ncols, i, j;
+
+  double** u = rbcluster_ary_to_rows(data, &nrows, &ncols);
+  int ndata = min(nrows, ncols);
+
+  double** v = malloc(ndata*sizeof(double*));
+  for(i = 0; i < ndata; ++i) {
+    v[i] = malloc(sizeof(double));
+  }
+  double* w = malloc(ndata*sizeof(double));
+  double* means = malloc(ncols*sizeof(double*));
+
+  // calculate the mean of each column
+  for(j = 0; j < ncols; ++j) {
+    means[j] = 0.0;
+    for(i = 0; i < nrows; ++i) {
+      means[j] += u[i][j];
+    }
+
+    means[j] /= nrows;
+  }
+
+  // subtract the mean of each column
+  for(i = 0; i < nrows; ++i) {
+    for(j = 0; j < ncols; ++j) {
+      u[i][j] = u[i][j] - means[j];
+    }
+  }
+
+  pca(nrows, ncols, u, v, w);
+
+  VALUE mean = rbcluster_doubles2rb(means, ncols);
+  VALUE eigenvalues = rbcluster_doubles2rb(w, ndata);
+  VALUE coordinates = Qnil;
+  VALUE pc = Qnil;
+
+  if(nrows >= ncols) {
+    coordinates = rbcluster_rows2rb(u, nrows, ncols);
+    pc          = rbcluster_rows2rb(v, ndata, ndata);
+  } else {
+    pc          = rbcluster_rows2rb(u, nrows, ncols);
+    coordinates = rbcluster_rows2rb(v, ndata, ndata);
+  }
+
+  rbcluster_free_rows(u, nrows);
+  rbcluster_free_rows(v, ndata);
+  free(w);
+  free(means);
+
+  return rb_ary_new3(4, mean, coordinates, pc, eigenvalues);
+}
+
 void Init_rbcluster() {
   rbcluster_mCluster = rb_define_module("Cluster");
   rbcluster_cNode = rb_define_class_under(rbcluster_mCluster, "Node", rb_cObject);
@@ -661,6 +745,7 @@ void Init_rbcluster() {
   rb_define_singleton_method(rbcluster_mCluster, "clusterdistance", rbcluster_clusterdistance, -1);
   rb_define_singleton_method(rbcluster_mCluster, "treecluster", rbcluster_treecluster, -1);
   rb_define_singleton_method(rbcluster_mCluster, "somcluster", rbcluster_somcluster, -1);
+  rb_define_singleton_method(rbcluster_mCluster, "pca", rbcluster_pca, 1);
 
   rb_define_const(rbcluster_mCluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
 }
