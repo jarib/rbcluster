@@ -6,8 +6,8 @@ Ruby bindings to the Cluster C library.
 TODO
 ----
 
+
 * Cluster.clustercentroids
-* Cluster.pca
 
 * an examples/ folder
 * make :transpose work
@@ -16,6 +16,7 @@ TODO
 DONE
 ----
 
+* Cluster.pca
 * Cluster.somcluster
 * Cluster.treecluster
 * Cluster.clusterdistance
