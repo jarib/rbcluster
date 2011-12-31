@@ -1,62 +1,66 @@
 require 'spec_helper'
 
 describe "Cluster.pca" do
-  # it "performs principal component analysis where nrows > ncols" do
-  #   data = [
-  #     [ 3.1, 1.2 ],
-  #     [ 1.4, 1.3 ],
-  #     [ 1.1, 1.5 ],
-  #     [ 2.0, 1.5 ],
-  #     [ 1.7, 1.9 ],
-  #     [ 1.7, 1.9 ],
-  #     [ 5.7, 5.9 ],
-  #     [ 5.7, 5.9 ],
-  #     [ 3.1, 3.3 ],
-  #     [ 5.4, 5.3 ],
-  #     [ 5.1, 5.5 ],
-  #     [ 5.0, 5.5 ],
-  #     [ 5.1, 5.2 ],
-  #   ]
-  #
-  #   mean, coordinates, pc, eigenvalues = Cluster.pca(data)
-  #
-  #   mean[0].should be_within(0.001).of(3.5461538461538464)
-  #   mean[1].should be_within(0.001).of(3.5307692307692311)
-  #   coordinates[0][0].should be_within(0.001).of(2.0323189722653883)
-  #   coordinates[0][1].should be_within(0.001).of(1.2252420399694917)
-  #   coordinates[1][0].should be_within(0.001).of(3.0936985166252251)
-  #   coordinates[1][1].should be_within(0.001).of(-0.10647619705157851)
-  #   coordinates[2][0].should be_within(0.001).of(3.1453186907749426)
-  #   coordinates[2][1].should be_within(0.001).of(-0.46331699855941139)
-  #   coordinates[3][0].should be_within(0.001).of(2.5440202962223761)
-  #   coordinates[3][1].should be_within(0.001).of(0.20633980959571077)
-  #   coordinates[4][0].should be_within(0.001).of(2.4468278463376221)
-  #   coordinates[4][1].should be_within(0.001).of(-0.28412285736824866)
-  #   coordinates[5][0].should be_within(0.001).of(2.4468278463376221)
-  #   coordinates[5][1].should be_within(0.001).of(-0.28412285736824866)
-  #   coordinates[6][0].should be_within(0.001).of(-3.2018619434743254)
-  #   coordinates[6][1].should be_within(0.001).of(0.019692314198662915)
-  #   coordinates[7][0].should be_within(0.001).of(-3.2018619434743254)
-  #   coordinates[7][1].should be_within(0.001).of(0.019692314198662915)
-  #   coordinates[8][0].should be_within(0.001).of(0.46978641990344067)
-  #   coordinates[8][1].should be_within(0.001).of(-0.17778754731982949)
-  #   coordinates[9][0].should be_within(0.001).of(-2.5549912731867215)
-  #   coordinates[9][1].should be_within(0.001).of(0.19733897451533403)
-  #   coordinates[10][0].should be_within(0.001).of(-2.5033710990370044)
-  #   coordinates[10][1].should be_within(0.001).of(-0.15950182699250004)
-  #   coordinates[11][0].should be_within(0.001).of(-2.4365601663089413)
-  #   coordinates[11][1].should be_within(0.001).of(-0.23390813900973562)
-  #   coordinates[12][0].should be_within(0.001).of(-2.2801521629852974)
-  #   coordinates[12][1].should be_within(0.001).of(  0.0409309711916888)
-  #   pc[0][0].should be_within(0.001).of(-0.66810932728062988)
-  #   pc[0][1].should be_within(0.001).of(-0.74406312017235743)
-  #   pc[1][0].should be_within(0.001).of(  0.74406312017235743)
-  #   pc[1][1].should be_within(0.001).of(-0.66810932728062988)
-  #   eigenvalues[0].should be_within(0.001).of( 9.3110471246032844)
-  #   eigenvalues[1].should be_within(0.001).of( 1.4437456297481428)
-  # end
+  it "performs principal component analysis where nrows > ncols" do
+    pending "TODO: fix memory bugs..."
+
+    data = [
+      [ 3.1, 1.2 ],
+      [ 1.4, 1.3 ],
+      [ 1.1, 1.5 ],
+      [ 2.0, 1.5 ],
+      [ 1.7, 1.9 ],
+      [ 1.7, 1.9 ],
+      [ 5.7, 5.9 ],
+      [ 5.7, 5.9 ],
+      [ 3.1, 3.3 ],
+      [ 5.4, 5.3 ],
+      [ 5.1, 5.5 ],
+      [ 5.0, 5.5 ],
+      [ 5.1, 5.2 ],
+    ]
+
+    mean, coordinates, pc, eigenvalues = Cluster.pca(data)
+
+    mean[0].should be_within(0.001).of(3.5461538461538464)
+    mean[1].should be_within(0.001).of(3.5307692307692311)
+    coordinates[0][0].should be_within(0.001).of(2.0323189722653883)
+    coordinates[0][1].should be_within(0.001).of(1.2252420399694917)
+    coordinates[1][0].should be_within(0.001).of(3.0936985166252251)
+    coordinates[1][1].should be_within(0.001).of(-0.10647619705157851)
+    coordinates[2][0].should be_within(0.001).of(3.1453186907749426)
+    coordinates[2][1].should be_within(0.001).of(-0.46331699855941139)
+    coordinates[3][0].should be_within(0.001).of(2.5440202962223761)
+    coordinates[3][1].should be_within(0.001).of(0.20633980959571077)
+    coordinates[4][0].should be_within(0.001).of(2.4468278463376221)
+    coordinates[4][1].should be_within(0.001).of(-0.28412285736824866)
+    coordinates[5][0].should be_within(0.001).of(2.4468278463376221)
+    coordinates[5][1].should be_within(0.001).of(-0.28412285736824866)
+    coordinates[6][0].should be_within(0.001).of(-3.2018619434743254)
+    coordinates[6][1].should be_within(0.001).of(0.019692314198662915)
+    coordinates[7][0].should be_within(0.001).of(-3.2018619434743254)
+    coordinates[7][1].should be_within(0.001).of(0.019692314198662915)
+    coordinates[8][0].should be_within(0.001).of(0.46978641990344067)
+    coordinates[8][1].should be_within(0.001).of(-0.17778754731982949)
+    coordinates[9][0].should be_within(0.001).of(-2.5549912731867215)
+    coordinates[9][1].should be_within(0.001).of(0.19733897451533403)
+    coordinates[10][0].should be_within(0.001).of(-2.5033710990370044)
+    coordinates[10][1].should be_within(0.001).of(-0.15950182699250004)
+    coordinates[11][0].should be_within(0.001).of(-2.4365601663089413)
+    coordinates[11][1].should be_within(0.001).of(-0.23390813900973562)
+    coordinates[12][0].should be_within(0.001).of(-2.2801521629852974)
+    coordinates[12][1].should be_within(0.001).of(  0.0409309711916888)
+    pc[0][0].should be_within(0.001).of(-0.66810932728062988)
+    pc[0][1].should be_within(0.001).of(-0.74406312017235743)
+    pc[1][0].should be_within(0.001).of(  0.74406312017235743)
+    pc[1][1].should be_within(0.001).of(-0.66810932728062988)
+    eigenvalues[0].should be_within(0.001).of( 9.3110471246032844)
+    eigenvalues[1].should be_within(0.001).of( 1.4437456297481428)
+  end
 
   it "performs principal component analysis where ncols > nrows" do
+    pending "TODO: fix memory bugs..."
+
     data = [[ 2.3, 4.5, 1.2, 6.7, 5.3, 7.1],
             [ 1.3, 6.5, 2.2, 5.7, 6.2, 9.1],
             [ 3.2, 7.2, 3.2, 7.4, 7.3, 8.9],
