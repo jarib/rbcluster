@@ -16,13 +16,12 @@ module Cluster
 
     context "using" do
       let :tree do
-        Tree.new(Cluster.treecluster([
+        Cluster.treecluster([
             [  1.1, 2.2, 3.3, 4.4, 5.5],
             [  3.1, 3.2, 1.3, 2.4, 1.5],
             [  4.1, 2.2, 0.3, 5.4, 0.5],
             [ 12.1, 2.0, 0.0, 5.0, 0.0]
-          ])
-        )
+        ])
       end
 
       it "fetches a copy of the node array" do

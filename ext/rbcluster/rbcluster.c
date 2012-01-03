@@ -611,7 +611,7 @@ VALUE rbcluster_treecluster(int argc, VALUE* argv, VALUE self) {
   rbcluster_free_rows(rows, nrows);
   rbcluster_free_mask(mask, nrows);
 
-  VALUE args[1] = { result, NULL };
+  VALUE args[] = { result };
   return rb_class_new_instance(1, args, rbcluster_cTree);
 }
 
