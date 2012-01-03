@@ -42,6 +42,26 @@ double* rbcluster_ary_to_doubles(VALUE data, int len) {
   return result;
 }
 
+Node* rbcluster_ary_to_nodes(VALUE data, int* len) {
+  Check_Type(data, T_ARRAY);
+
+  long length = RARRAY_LEN(data);
+
+  Node* result = (Node*)malloc(length*sizeof(Node));
+
+  for(int i = 0; i < length; ++i)
+  {
+    VALUE node = rb_ary_entry(data, i);
+
+    result[i].left = NUM2INT(rb_ivar_get(node, rb_intern("@left")));
+    result[i].right = NUM2INT(rb_ivar_get(node, rb_intern("@right")));
+    result[i].distance = NUM2DBL(rb_ivar_get(node, rb_intern("@distance")));
+  }
+
+  *len = (int)length;
+  return result;
+}
+
 double** rbcluster_ary_to_rows(VALUE data, int* nrows, int* ncols) {
   Check_Type(data, T_ARRAY);
   long rows, cols;
@@ -265,7 +285,7 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   free(weight);
   free(clusterid);
 
-  return rb_ary_new3(3, result, rb_float_new(error), INT2NUM(ifound));
+  return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
 }
 
 VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
@@ -329,7 +349,7 @@ VALUE rbcluster_kmedoids(int argc, VALUE* argv, VALUE self) {
   free(clusterid);
   for(i = 1; i < nitems; ++i) free(distances[i]);
 
-  return rb_ary_new3(3, result, rb_float_new(error), INT2NUM(ifound));
+  return rb_ary_new3(3, result, DBL2NUM(error), INT2NUM(ifound));
 }
 
 VALUE rbcluster_median(VALUE self, VALUE ary) {
@@ -345,7 +365,7 @@ VALUE rbcluster_median(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return rb_float_new(median((int)len, arr));
+  return DBL2NUM(median((int)len, arr));
 }
 
 VALUE rbcluster_mean(VALUE self, VALUE ary) {
@@ -361,7 +381,7 @@ VALUE rbcluster_mean(VALUE self, VALUE ary) {
     arr[i] = NUM2DBL(num);
   }
 
-  return rb_float_new(mean((int)len, arr));
+  return DBL2NUM(mean((int)len, arr));
 }
 
 VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
@@ -403,7 +423,7 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
       VALUE row = rb_ary_new();
 
       for(j = 0; j < i; ++j){
-        rb_ary_push(row, rb_float_new(distances[i][j]));
+        rb_ary_push(row, DBL2NUM(distances[i][j]));
       }
 
       // first row is NULL
@@ -482,7 +502,7 @@ VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
   rbcluster_free_rows(rows, nrows);
   rbcluster_free_mask(mask, nrows);
 
-  return rb_float_new(result);
+  return DBL2NUM(result);
 }
 
 VALUE rbcluster_create_node(Node* node) {
@@ -499,6 +519,10 @@ VALUE rbcluster_node_initialize(int argc, VALUE* argv, VALUE self) {
   VALUE left, right, distance;
 
   rb_scan_args(argc, argv, "21", &left, &right, &distance);
+
+  if(NIL_P(distance)) {
+    distance = DBL2NUM(0.0);
+  }
 
   rb_ivar_set(self, rb_intern("@left"), left);
   rb_ivar_set(self, rb_intern("@right"), right);
@@ -648,7 +672,7 @@ VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
     for(j = 0; j < nygrid; ++j) {
       jarr = rb_ary_new2(ncols);
       for(k = 0; k < ncols; ++k) {
-        rb_ary_push(jarr, rb_float_new(celldata[i][j][k]));
+        rb_ary_push(jarr, DBL2NUM(celldata[i][j][k]));
       }
       rb_ary_push(iarr, jarr);
     }
@@ -724,7 +748,7 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
 
   int ok = pca(nrows, ncols, u, v, w);
   if(ok == -1) {
-    rb_raise(rb_eStandardError, "could not allocate memory");
+    rb_raise(rb_eNoMemError, "could not allocate memory");
   } else if(ok > 0) {
     rb_raise(rb_eStandardError, "svd failed to converge");
   }
@@ -751,6 +775,33 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
   return rb_ary_new3(4, mean, coordinates, pc, eigenvalues);
 }
 
+VALUE rbcluster_cuttree(VALUE self, VALUE nodes, VALUE clusters) {
+  int nelements, nclusters;
+
+  nclusters = NUM2INT(clusters);
+
+  Node* cnodes = rbcluster_ary_to_nodes(nodes, &nelements);
+  int n = nelements + 1;
+
+  if(nclusters < 1) {
+    rb_raise(rb_eArgError, "nclusters must be >= 1");
+  }
+
+  if(nclusters > n) {
+    rb_raise(rb_eArgError, "more clusters requested than items available");
+  }
+
+  int clusterid[n];
+  cuttree(n, cnodes, nclusters, clusterid);
+  free(cnodes);
+
+  if(clusterid[0] == -1) {
+    rb_raise(rb_eNoMemError, "could not allocate memory for cuttree()");
+  }
+
+  return rbcluster_ints2rb(clusterid, (long)n);
+}
+
 void Init_rbcluster() {
   rbcluster_mCluster = rb_define_module("Cluster");
   rbcluster_cNode = rb_define_class_under(rbcluster_mCluster, "Node", rb_cObject);
@@ -770,6 +821,7 @@ void Init_rbcluster() {
   rb_define_singleton_method(rbcluster_mCluster, "treecluster", rbcluster_treecluster, -1);
   rb_define_singleton_method(rbcluster_mCluster, "somcluster", rbcluster_somcluster, -1);
   rb_define_singleton_method(rbcluster_mCluster, "pca", rbcluster_pca, 1);
+  rb_define_singleton_method(rbcluster_mCluster, "cuttree", rbcluster_cuttree, 2);
 
   rb_define_const(rbcluster_mCluster, "C_VERSION", rb_str_new2(CLUSTERVERSION));
 }

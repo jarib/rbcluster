@@ -6,6 +6,7 @@ module Cluster
       n = Node.new(2, 3)
       n.left.should == 2
       n.right.should == 3
+      n.distance.should == 0.0
     end
 
     it "takes an optional distance" do
