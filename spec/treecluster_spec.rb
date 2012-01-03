@@ -374,7 +374,39 @@ describe "Cluster.treecluster" do
       tree[11].right.should == -9
       tree[11].distance.should be_within(0.001).of(22.734)
     end
+  end
 
+  context "bad input" do
+    it "fails for a ragged matrix" do
+      ragged = [
+          [ 91.1, 92.2, 93.3, 94.4, 95.5],
+          [ 93.1, 93.2, 91.3, 92.4 ],
+          [ 94.1, 92.2, 90.3 ],
+          [ 12.1, 92.0, 90.0, 95.0, 90.0 ]
+        ]
+
+      lambda { Cluster.treecluster(ragged) }.should raise_error(ArgumentError)
+    end
+
+    it "fails for a matrix with bad cells" do
+      bad_cells = [
+        [ 7.1, 7.2, 7.3, 7.4, 7.5, ],
+        [ 7.1, 7.2, 7.3, 7.4, 'snoopy'],
+        [ 7.1, 7.2, 7.3, nil, nil]
+      ]
+
+      lambda { Cluster.treecluster(bad_cells) }.should raise_error(TypeError)
+    end
+
+    it "fails for a matrix with a bad row" do
+      bad_row = [
+        [ 23.1, 23.2, 23.3, 23.4, 23.5],
+        nil,
+        [ 23.1, 23.0, 23.0, 23.0, 23.0]
+      ]
+
+      lambda { Cluster.treecluster(bad_row) }.should raise_error(TypeError)
+    end
   end
 end
 
