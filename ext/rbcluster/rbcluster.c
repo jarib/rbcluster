@@ -3,6 +3,11 @@
 #include "ruby.h"
 #include "cluster.h"
 
+// missing on 1.8
+#ifndef DBL2NUM
+#define DBL2NUM( dbl_val ) rb_float_new( dbl_val )
+#endif
+
 VALUE rbcluster_mCluster = Qnil;
 VALUE rbcluster_cNode = Qnil;
 
