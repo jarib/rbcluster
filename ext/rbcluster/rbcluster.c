@@ -486,13 +486,25 @@ VALUE rbcluster_clusterdistance(int argc, VALUE* argv, VALUE self) {
 }
 
 VALUE rbcluster_create_node(Node* node) {
-  VALUE result = rb_class_new_instance(0, NULL, rbcluster_cNode);
+  VALUE args[3];
 
-  rb_ivar_set(result, rb_intern("@left"), INT2NUM(node->left));
-  rb_ivar_set(result, rb_intern("@right"), INT2NUM(node->right));
-  rb_ivar_set(result, rb_intern("@distance"), rb_float_new(node->distance));
+  args[0] = INT2NUM(node->left);
+  args[1] = INT2NUM(node->right);
+  args[2] = DBL2NUM(node->distance);
 
-  return result;
+  return rb_class_new_instance(3, args, rbcluster_cNode);
+}
+
+VALUE rbcluster_node_initialize(int argc, VALUE* argv, VALUE self) {
+  VALUE left, right, distance;
+
+  rb_scan_args(argc, argv, "21", &left, &right, &distance);
+
+  rb_ivar_set(self, rb_intern("@left"), left);
+  rb_ivar_set(self, rb_intern("@right"), right);
+  rb_ivar_set(self, rb_intern("@distance"), distance);
+
+  return self;
 }
 
 double*** rbcluster_create_celldata(int nxgrid, int nygrid, int ndata) {
@@ -730,7 +742,6 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
     coordinates = rbcluster_rows2rb(v, ndata, ndata);
   }
 
-
   rbcluster_free_rows(u, nrows);
   rbcluster_free_rows(v, ndata);
 
@@ -744,9 +755,10 @@ void Init_rbcluster() {
   rbcluster_mCluster = rb_define_module("Cluster");
   rbcluster_cNode = rb_define_class_under(rbcluster_mCluster, "Node", rb_cObject);
 
-  rb_define_attr(rbcluster_cNode, "left", 1, 0);
-  rb_define_attr(rbcluster_cNode, "right", 1, 0);
-  rb_define_attr(rbcluster_cNode, "distance", 1, 0);
+  rb_define_attr(rbcluster_cNode, "left", 1, 1);
+  rb_define_attr(rbcluster_cNode, "right", 1, 1);
+  rb_define_attr(rbcluster_cNode, "distance", 1, 1);
+  rb_define_method(rbcluster_cNode, "initialize", rbcluster_node_initialize, -1);
 
   rb_define_singleton_method(rbcluster_mCluster, "median", rbcluster_median, 1);
   rb_define_singleton_method(rbcluster_mCluster, "mean", rbcluster_mean, 1);
