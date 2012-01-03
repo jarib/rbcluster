@@ -10,7 +10,7 @@ Functions:
 
   * Cluster.clustercentroids
   * Cluster.clustermedoids
-  * Cluster.cuttree
+  * Cluster::Tree#{cut,slice,[],fetch}
 
 Other:
 
