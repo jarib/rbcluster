@@ -45,6 +45,14 @@ module Cluster
       it "can cut the tree" do
         tree.cut(3).should == [1, 2, 2, 0]
       end
+
+      it "gets a node" do
+        tree[0].should == tree.to_a[0]
+      end
+
+      it "fetches a node" do
+        tree.fetch(0).should == tree.to_a[0]
+      end
     end
   end
 end
