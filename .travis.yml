@@ -5,3 +5,4 @@ rvm:
   - ruby-head
   - rbx
   - jruby
+env: JRUBY_OPTS='--server'
