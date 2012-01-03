@@ -3,6 +3,9 @@ rbcluster
 
 Ruby bindings to the Cluster C library.
 
+[![Build Status](https://secure.travis-ci.org/jarib/rbcluster.png)](http://travis-ci.org/jarib/rbcluster)
+
+
 TODO
 ----
 
