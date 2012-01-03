@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe "Cluster.pca" do
   it "performs principal component analysis where nrows > ncols" do
-    pending "TODO: fix memory bugs..."
-
     data = [
       [ 3.1, 1.2 ],
       [ 1.4, 1.3 ],
@@ -59,8 +57,6 @@ describe "Cluster.pca" do
   end
 
   it "performs principal component analysis where ncols > nrows" do
-    pending "TODO: fix memory bugs..."
-
     data = [[ 2.3, 4.5, 1.2, 6.7, 5.3, 7.1],
             [ 1.3, 6.5, 2.2, 5.7, 6.2, 9.1],
             [ 3.2, 7.2, 3.2, 7.4, 7.3, 8.9],

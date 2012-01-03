@@ -683,10 +683,10 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
 
   double** v = malloc(ndata*sizeof(double*));
   for(i = 0; i < ndata; ++i) {
-    v[i] = malloc(sizeof(double));
+    v[i] = malloc(ndata*sizeof(double));
   }
   double* w = malloc(ndata*sizeof(double));
-  double* means = malloc(ncols*sizeof(double*));
+  double* means = malloc(ncols*sizeof(double));
 
   // calculate the mean of each column
   for(j = 0; j < ncols; ++j) {
@@ -705,7 +705,12 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
     }
   }
 
-  pca(nrows, ncols, u, v, w);
+  int ok = pca(nrows, ncols, u, v, w);
+  if(ok == -1) {
+    rb_raise(rb_eStandardError, "could not allocate memory");
+  } else if(ok > 0) {
+    rb_raise(rb_eStandardError, "svd failed to converge");
+  }
 
   VALUE mean = rbcluster_doubles2rb(means, ncols);
   VALUE eigenvalues = rbcluster_doubles2rb(w, ndata);
@@ -720,8 +725,10 @@ VALUE rbcluster_pca(VALUE self, VALUE data) {
     coordinates = rbcluster_rows2rb(v, ndata, ndata);
   }
 
+
   rbcluster_free_rows(u, nrows);
   rbcluster_free_rows(v, ndata);
+
   free(w);
   free(means);
 
