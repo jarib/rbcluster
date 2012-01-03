@@ -10,6 +10,7 @@
 
 VALUE rbcluster_mCluster = Qnil;
 VALUE rbcluster_cNode = Qnil;
+VALUE rbcluster_cTree = Qnil;
 
 VALUE rbcluster_rows2rb(double** data, int nrows, int ncols) {
   VALUE rows = rb_ary_new2((long)nrows);
@@ -610,7 +611,8 @@ VALUE rbcluster_treecluster(int argc, VALUE* argv, VALUE self) {
   rbcluster_free_rows(rows, nrows);
   rbcluster_free_mask(mask, nrows);
 
-  return result;
+  VALUE args[1] = { result, NULL };
+  return rb_class_new_instance(1, args, rbcluster_cTree);
 }
 
 VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
@@ -696,7 +698,7 @@ VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
   return rb_ary_new3(2, rb_clusterid, rb_celldata);
 }
 
-void print_doubles(double* vals, int len) {
+void rbcluster_print_doubles(double* vals, int len) {
   puts("[");
   for(int i = 0; i < len; ++i) {
     printf("\t%d: %f\n", i, vals[i]);
@@ -704,7 +706,7 @@ void print_doubles(double* vals, int len) {
   puts("]");
 }
 
-void print_double_matrix(double** vals, int nrows, int ncols) {
+void rbcluster_print_double_matrix(double** vals, int nrows, int ncols) {
   puts("[");
   for(int i = 0; i < nrows; ++i) {
     printf("\t[ ");
@@ -805,6 +807,7 @@ VALUE rbcluster_cuttree(VALUE self, VALUE nodes, VALUE clusters) {
 void Init_rbcluster() {
   rbcluster_mCluster = rb_define_module("Cluster");
   rbcluster_cNode = rb_define_class_under(rbcluster_mCluster, "Node", rb_cObject);
+  rbcluster_cTree = rb_define_class_under(rbcluster_mCluster, "Tree", rb_cObject);
 
   rb_define_attr(rbcluster_cNode, "left", 1, 1);
   rb_define_attr(rbcluster_cNode, "right", 1, 1);

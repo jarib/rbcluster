@@ -6,6 +6,7 @@ module Cluster
       it "should raise ArgumentError if not given an array of Nodes" do
         lambda { Tree.new(1) }.should raise_error(ArgumentError)
         lambda { Tree.new([Node.new(1,2), Node.new(2,3), nil]) }.should raise_error(ArgumentError)
+        lambda { Tree.new }.should raise_error(ArgumentError)
       end
 
       it "returns a Tree instance when given an array of nodes" do
