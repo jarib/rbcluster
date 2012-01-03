@@ -14,9 +14,8 @@ Functions:
 
 Other:
 
-* an examples/ folder
 * make :transpose work
-* specs for bad inputs
+* more specs for bad inputs
 
 DONE
 ----
