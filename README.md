@@ -6,8 +6,13 @@ Ruby bindings to the Cluster C library.
 TODO
 ----
 
+Functions:
 
-* Cluster.clustercentroids
+  * Cluster.clustercentroids
+  * Cluster.clustermedoids
+  * Cluster.cuttree
+
+Other:
 
 * an examples/ folder
 * make :transpose work
