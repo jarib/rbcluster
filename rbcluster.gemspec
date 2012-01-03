@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jari Bakken", "Michiel Jan Laurens de Hoon"]
   s.email       = ["jari.bakken@gmail.com"]
-  s.homepage    = "http://bonsai.hgc.jp/~mdehoon/software/cluster/software.htm"
+  s.homepage    = "http://github.com/jarib/rbcluster"
   s.summary     = %q{Ruby bindings for the Cluster C library}
   s.description = %q{This gem provides a Ruby extension to the clustering routines in the C Clustering Library (which also backs e.g. Python's pycluster and Perl's Algorithm::Cluster).}
 

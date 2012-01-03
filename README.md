@@ -36,6 +36,7 @@ See also
 
 * http://bonsai.hgc.jp/~mdehoon/software/cluster/software.htm
 * http://bonsai.hgc.jp/~mdehoon/software/cluster/cluster.pdf
+* http://github.com/jarib/rbcluster
 
 Note on Patches/Pull Requests
 -----------------------------
