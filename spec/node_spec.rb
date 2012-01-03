@@ -15,5 +15,13 @@ module Cluster
       n.right.should == 3
       n.distance.should == 0.91
     end
+
+    it "is mutable" do
+      n = Node.new(2, 3, 0.91)
+
+      n.left = 4
+      n.right = 5
+      n.distance = 2.1
+    end
   end
 end
