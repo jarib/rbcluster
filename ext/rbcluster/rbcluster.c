@@ -534,13 +534,31 @@ VALUE rbcluster_node_initialize(int argc, VALUE* argv, VALUE self) {
 
 double*** rbcluster_create_celldata(int nxgrid, int nygrid, int ndata) {
   double*** celldata = calloc(nxgrid*nygrid*ndata, sizeof(double**));
-  int i, j;
-
-  for (i = 0; i < nxgrid; i++)
-  { celldata[i] = calloc(nygrid*ndata, sizeof(double*));
-    for (j = 0; j < nygrid; j++)
-      celldata[i][j] = calloc(ndata, sizeof(double));
+  if(!celldata) {
+    rb_raise(rb_eNoMemError, "could not allocate celldata array");
   }
+
+  int i, j, k;
+
+  for (i = 0; i < nxgrid; i++) {
+    celldata[i] = calloc(nygrid*ndata, sizeof(double*));
+    if(!celldata[i]) {
+      rb_raise(rb_eNoMemError, "could not allocate celldata array");
+    }
+
+    for (j = 0; j < nygrid; j++) {
+      celldata[i][j] = calloc(ndata, sizeof(double));
+      if(!celldata[i][j]) {
+        rb_raise(rb_eNoMemError, "could not allocate celldata array");
+      }
+
+      for(k = 0; k < ndata; k++) {
+        celldata[i][j][k] = 0.0;
+      }
+    }
+  }
+
+  printf("celldata: %p\n", celldata);
 
   return celldata;
 }
@@ -641,6 +659,18 @@ VALUE rbcluster_somcluster(int argc, VALUE* argv, VALUE self) {
     rbcluster_parse_double(opts, "inittau", &inittau);
     rbcluster_parse_int(opts, "niter", &niter);
     rbcluster_parse_char(opts, "dist", &dist);
+  }
+
+  if(nygrid < 1) {
+    rb_raise(rb_eArgError, ":nygrid must be a positive integer (default: 2)");
+  }
+
+  if(nxgrid < 1) {
+    rb_raise(rb_eArgError, ":nxgrid must be a positive integer");
+  }
+
+  if(niter < 1) {
+    rb_raise(rb_eArgError, ":niter must be a positive integer");
   }
 
   int i, j, k;
