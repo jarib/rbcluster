@@ -558,8 +558,6 @@ double*** rbcluster_create_celldata(int nxgrid, int nygrid, int ndata) {
     }
   }
 
-  printf("celldata: %p\n", celldata);
-
   return celldata;
 }
 
