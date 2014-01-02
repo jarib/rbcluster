@@ -1,6 +1,6 @@
 include Rake::DSL if defined?(Rake::DSL)
 
-require 'bundler'
+require 'bundler/setup'
 Bundler::GemHelper.install_tasks
 
 require 'rake/extensiontask'
