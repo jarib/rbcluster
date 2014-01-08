@@ -251,7 +251,6 @@ VALUE rbcluster_kcluster(int argc, VALUE* argv, VALUE self) {
   // options
   if(opts != Qnil) {
     Check_Type(opts, T_HASH);
-    VALUE val;
 
     rbcluster_parse_int(opts, "clusters", &nclusters);
     rbcluster_parse_mask(opts, mask, nrows, ncols);
@@ -399,7 +398,6 @@ VALUE rbcluster_distancematrix(int argc, VALUE* argv, VALUE self) {
 
   if(opts != Qnil) {
     Check_Type(opts, T_HASH);
-    VALUE val;
 
     rbcluster_parse_mask(opts, mask, nrows, ncols);
     rbcluster_parse_weight(opts, &weight, ncols);
