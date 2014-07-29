@@ -4,17 +4,17 @@ module Cluster
   describe Node do
     it "creates a new node with left/right" do
       n = Node.new(2, 3)
-      n.left.should == 2
-      n.right.should == 3
-      n.distance.should == 0.0
+      expect(n.left).to be(2)
+      expect(n.right).to be(3)
+      expect(n.distance).to be(0.0)
     end
 
     it "takes an optional distance" do
       n = Node.new(2, 3, 0.91)
 
-      n.left.should == 2
-      n.right.should == 3
-      n.distance.should == 0.91
+      expect(n.left).to be(2)
+      expect(n.right).to be(3)
+      expect(n.distance).to be(0.91)
     end
 
     it "is mutable" do

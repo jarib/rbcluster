@@ -24,7 +24,7 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(6.650)
+    expect(distance).to be_within(0.001).of(6.650)
 
     distance = Cluster.clusterdistance data, c1, c3, :mask      => mask,
                                                      :weight    => weight,
@@ -32,7 +32,7 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(32.508)
+    expect(distance).to be_within(0.001).of(32.508)
 
     distance = Cluster.clusterdistance data, c2, c3, :mask      => mask,
                                                      :weight    => weight,
@@ -40,7 +40,7 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(15.118)
+    expect(distance).to be_within(0.001).of(15.118)
   end
 
   it "calculates distances for data set 2" do
@@ -83,7 +83,7 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(5.833)
+    expect(distance).to be_within(0.001).of(5.833)
 
     distance = Cluster.clusterdistance data, c1, c3, :mask      => mask,
                                                      :weight    => weight,
@@ -91,7 +91,7 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(3.298)
+    expect(distance).to be_within(0.001).of(3.298)
 
 
     distance = Cluster.clusterdistance data, c2, c3, :mask      => mask,
@@ -100,7 +100,6 @@ describe "Cluster.clusterdistance" do
                                                      :method    => 'a',
                                                      :transpose => false
 
-    distance.should be_within(0.001).of(0.360)
+    expect(distance).to be_within(0.001).of(0.360)
   end
 end
-
