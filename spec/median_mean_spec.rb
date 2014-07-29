@@ -9,14 +9,14 @@ describe "Cluster.{median,mean}" do
       [ 100, 19, 3, 1.5, 1.4, 1, 1, 1],
     ]
   }
-  
+
   it "calculates the median" do
     Cluster.median(data[0]).should == 3.0
     Cluster.median(data[1]).should == 12.5
     Cluster.median(data[2]).should == 6.0
     Cluster.median(data[3]).should == 1.45
   end
-  
+
   it "calculates the mean" do
     Cluster.mean(data[0]).should be_within(0.001).of(13.1)
     Cluster.mean(data[1]).should be_within(0.001).of(12.5)

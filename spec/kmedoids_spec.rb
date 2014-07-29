@@ -11,7 +11,7 @@ describe "Cluster.kmedoids" do
            [2.3, 1.2, 3.9],
            [4.2, 9.6, 9.3],
            [1.7, 8.9, 1.1]]
-           
+
     mask = [[1, 1, 1],
            [1, 1, 1],
            [0, 1, 1],
@@ -21,7 +21,7 @@ describe "Cluster.kmedoids" do
            [1, 1, 1],
            [1, 0, 1],
            [1, 1, 1]]
-           
+
     weight = [2.0, 1.0, 0.5]
     matrix = Cluster.distancematrix data, :mask => mask, :weight => weight
 
@@ -68,9 +68,9 @@ describe "Cluster.kmedoids" do
     matrix[8][5].should be_within(0.001).of(33.640)
     matrix[8][6].should be_within(0.001).of(18.266)
     matrix[8][7].should be_within(0.001).of(18.448)
-    
+
     clusterid, error, nfound = Cluster.kmedoids matrix, :passes => 1000
-    
+
     clusterid[0].should == 5
     clusterid[1].should == 5
     clusterid[2].should == 2
@@ -80,7 +80,7 @@ describe "Cluster.kmedoids" do
     clusterid[6].should == 5
     clusterid[7].should == 5
     clusterid[8].should == 2
-    
+
     error.should be_within(0.001).of(7.680)
   end
 end
