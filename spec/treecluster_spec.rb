@@ -28,18 +28,18 @@ describe "Cluster.treecluster" do
                                        :method    => 'a',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(2)
-      expect(tree[0].right).to be(1)
+      expect(tree[0].left).to eq(2)
+      expect(tree[0].right).to eq(1)
       expect(tree[0].distance).to be_within(0.001).of(2.600)
 
-      expect(tree[1].left).to be(-1)
-      expect(tree[1].right).to be(0)
+      expect(tree[1].left).to eq(-1)
+      expect(tree[1].right).to eq(0)
       expect(tree[1].distance).to be_within(0.001).of(7.300)
 
-      expect(tree[2].left).to be(3)
-      expect(tree[2].right).to be(-2)
+      expect(tree[2].left).to eq(3)
+      expect(tree[2].right).to eq(-2)
       expect(tree[2].distance).to be_within(0.001).of(21.348)
     end
 
@@ -50,18 +50,18 @@ describe "Cluster.treecluster" do
                                        :method    => 's',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(1)
-      expect(tree[0].right).to be(2)
+      expect(tree[0].left).to eq(1)
+      expect(tree[0].right).to eq(2)
       expect(tree[0].distance).to be_within(0.001).of(2.600)
 
-      expect(tree[1].left).to be(0)
-      expect(tree[1].right).to be(-1)
+      expect(tree[1].left).to eq(0)
+      expect(tree[1].right).to eq(-1)
       expect(tree[1].distance).to be_within(0.001).of(5.800)
 
-      expect(tree[2].left).to be(-2)
-      expect(tree[2].right).to be(3)
+      expect(tree[2].left).to eq(-2)
+      expect(tree[2].right).to eq(3)
       expect(tree[2].distance).to be_within(0.001).of(12.908)
     end
 
@@ -72,16 +72,16 @@ describe "Cluster.treecluster" do
                                        :method    => 'c',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(1)
-      expect(tree[0].right).to be(2)
+      expect(tree[0].left).to eq(1)
+      expect(tree[0].right).to eq(2)
       expect(tree[0].distance).to be_within(0.001).of(2.600)
-      expect(tree[1].left).to be(0)
-      expect(tree[1].right).to be(-1)
+      expect(tree[1].left).to eq(0)
+      expect(tree[1].right).to eq(-1)
       expect(tree[1].distance).to be_within(0.001).of(6.650)
-      expect(tree[2].left).to be(-2)
-      expect(tree[2].right).to be(3)
+      expect(tree[2].left).to eq(-2)
+      expect(tree[2].right).to eq(3)
       expect(tree[2].distance).to be_within(0.001).of(19.437)
     end
 
@@ -92,16 +92,16 @@ describe "Cluster.treecluster" do
                                        :method    => 'm',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(2)
-      expect(tree[0].right).to be(1)
+      expect(tree[0].left).to eq(2)
+      expect(tree[0].right).to eq(1)
       expect(tree[0].distance).to be_within(0.001).of(2.600)
-      expect(tree[1].left).to be(-1)
-      expect(tree[1].right).to be(0)
+      expect(tree[1].left).to eq(-1)
+      expect(tree[1].right).to eq(0)
       expect(tree[1].distance).to be_within(0.001).of(8.800)
-      expect(tree[2].left).to be(3)
-      expect(tree[2].right).to be(-2)
+      expect(tree[2].left).to eq(3)
+      expect(tree[2].right).to eq(-2)
       expect(tree[2].distance).to be_within(0.001).of(32.508)
     end
   end
@@ -151,53 +151,53 @@ describe "Cluster.treecluster" do
                                        :method    => 'a',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
-      expect(tree[0].left).to be(5)
-      expect(tree[0].right).to be(4)
+      expect(tree.size).to eq(data.size - 1)
+      expect(tree[0].left).to eq(5)
+      expect(tree[0].right).to eq(4)
       expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      expect(tree[1].left).to be(9)
-      expect(tree[1].right).to be(12)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
       expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      expect(tree[2].left).to be(2)
-      expect(tree[2].right).to be(1)
+      expect(tree[2].left).to eq(2)
+      expect(tree[2].right).to eq(1)
       expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      expect(tree[3].left).to be(11)
-      expect(tree[3].right).to be(-2)
+      expect(tree[3].left).to eq(11)
+      expect(tree[3].right).to eq(-2)
       expect(tree[3].distance).to be_within(0.001).of(0.070)
 
-      expect(tree[4].left).to be(-4)
-      expect(tree[4].right).to be(10)
+      expect(tree[4].left).to eq(-4)
+      expect(tree[4].right).to eq(10)
       expect(tree[4].distance).to be_within(0.001).of(0.128)
 
-      expect(tree[5].left).to be(7)
-      expect(tree[5].right).to be(-5)
+      expect(tree[5].left).to eq(7)
+      expect(tree[5].right).to eq(-5)
       expect(tree[5].distance).to be_within(0.001).of(0.224)
 
-      expect(tree[6].left).to be(-3)
-      expect(tree[6].right).to be(0)
+      expect(tree[6].left).to eq(-3)
+      expect(tree[6].right).to eq(0)
       expect(tree[6].distance).to be_within(0.001).of(0.254)
 
-      expect(tree[7].left).to be(-1)
-      expect(tree[7].right).to be(3)
+      expect(tree[7].left).to eq(-1)
+      expect(tree[7].right).to eq(3)
       expect(tree[7].distance).to be_within(0.001).of(0.391)
 
-      expect(tree[8].left).to be(-8)
-      expect(tree[8].right).to be(-7)
+      expect(tree[8].left).to eq(-8)
+      expect(tree[8].right).to eq(-7)
       expect(tree[8].distance).to be_within(0.001).of(0.532)
 
-      expect(tree[9].left).to be(8)
-      expect(tree[9].right).to be(-9)
+      expect(tree[9].left).to eq(8)
+      expect(tree[9].right).to eq(-9)
       expect(tree[9].distance).to be_within(0.001).of(3.234)
 
-      expect(tree[10].left).to be(-6)
-      expect(tree[10].right).to be(6)
+      expect(tree[10].left).to eq(-6)
+      expect(tree[10].right).to eq(6)
       expect(tree[10].distance).to be_within(0.001).of(4.636)
 
-      expect(tree[11].left).to be(-11)
-      expect(tree[11].right).to be(-10)
+      expect(tree[11].left).to eq(-11)
+      expect(tree[11].right).to eq(-10)
       expect(tree[11].distance).to be_within(0.001).of(12.741)
     end
 
@@ -208,54 +208,54 @@ describe "Cluster.treecluster" do
                                        :method    => 's',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(4)
-      expect(tree[0].right).to be(5)
+      expect(tree[0].left).to eq(4)
+      expect(tree[0].right).to eq(5)
       expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      expect(tree[1].left).to be(9)
-      expect(tree[1].right).to be(12)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
       expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      expect(tree[2].left).to be(11)
-      expect(tree[2].right).to be(-2)
+      expect(tree[2].left).to eq(11)
+      expect(tree[2].right).to eq(-2)
       expect(tree[2].distance).to be_within(0.001).of(0.033)
 
-      expect(tree[3].left).to be(1)
-      expect(tree[3].right).to be(2)
+      expect(tree[3].left).to eq(1)
+      expect(tree[3].right).to eq(2)
       expect(tree[3].distance).to be_within(0.001).of(0.061)
 
-      expect(tree[4].left).to be(10)
-      expect(tree[4].right).to be(-3)
+      expect(tree[4].left).to eq(10)
+      expect(tree[4].right).to eq(-3)
       expect(tree[4].distance).to be_within(0.001).of(0.077)
 
-      expect(tree[5].left).to be(7)
-      expect(tree[5].right).to be(-5)
+      expect(tree[5].left).to eq(7)
+      expect(tree[5].right).to eq(-5)
       expect(tree[5].distance).to be_within(0.001).of(0.092)
 
-      expect(tree[6].left).to be(0)
-      expect(tree[6].right).to be(-4)
+      expect(tree[6].left).to eq(0)
+      expect(tree[6].right).to eq(-4)
       expect(tree[6].distance).to be_within(0.001).of(0.242)
 
-      expect(tree[7].left).to be(-7)
-      expect(tree[7].right).to be(-1)
+      expect(tree[7].left).to eq(-7)
+      expect(tree[7].right).to eq(-1)
       expect(tree[7].distance).to be_within(0.001).of(0.246)
 
-      expect(tree[8].left).to be(3)
-      expect(tree[8].right).to be(-8)
+      expect(tree[8].left).to eq(3)
+      expect(tree[8].right).to eq(-8)
       expect(tree[8].distance).to be_within(0.001).of(0.287)
 
-      expect(tree[9].left).to be(-9)
-      expect(tree[9].right).to be(8)
+      expect(tree[9].left).to eq(-9)
+      expect(tree[9].right).to eq(8)
       expect(tree[9].distance).to be_within(0.001).of(1.936)
 
-      expect(tree[10].left).to be(-10)
-      expect(tree[10].right).to be(-6)
+      expect(tree[10].left).to eq(-10)
+      expect(tree[10].right).to eq(-6)
       expect(tree[10].distance).to be_within(0.001).of(3.432)
 
-      expect(tree[11].left).to be(6)
-      expect(tree[11].right).to be(-11)
+      expect(tree[11].left).to eq(6)
+      expect(tree[11].right).to eq(-11)
       expect(tree[11].distance).to be_within(0.001).of(3.535)
     end
 
@@ -266,54 +266,54 @@ describe "Cluster.treecluster" do
                                        :method    => 'c',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(4)
-      expect(tree[0].right).to be(5)
+      expect(tree[0].left).to eq(4)
+      expect(tree[0].right).to eq(5)
       expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      expect(tree[1].left).to be(12)
-      expect(tree[1].right).to be(9)
+      expect(tree[1].left).to eq(12)
+      expect(tree[1].right).to eq(9)
       expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      expect(tree[2].left).to be(1)
-      expect(tree[2].right).to be(2)
+      expect(tree[2].left).to eq(1)
+      expect(tree[2].right).to eq(2)
       expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      expect(tree[3].left).to be(-2)
-      expect(tree[3].right).to be(11)
+      expect(tree[3].left).to eq(-2)
+      expect(tree[3].right).to eq(11)
       expect(tree[3].distance).to be_within(0.001).of(0.063)
 
-      expect(tree[4].left).to be(10)
-      expect(tree[4].right).to be(-4)
+      expect(tree[4].left).to eq(10)
+      expect(tree[4].right).to eq(-4)
       expect(tree[4].distance).to be_within(0.001).of(0.109)
 
-      expect(tree[5].left).to be(-5)
-      expect(tree[5].right).to be(7)
+      expect(tree[5].left).to eq(-5)
+      expect(tree[5].right).to eq(7)
       expect(tree[5].distance).to be_within(0.001).of(0.189)
 
-      expect(tree[6].left).to be(0)
-      expect(tree[6].right).to be(-3)
+      expect(tree[6].left).to eq(0)
+      expect(tree[6].right).to eq(-3)
       expect(tree[6].distance).to be_within(0.001).of(0.239)
 
-      expect(tree[7].left).to be(3)
-      expect(tree[7].right).to be(-1)
+      expect(tree[7].left).to eq(3)
+      expect(tree[7].right).to eq(-1)
       expect(tree[7].distance).to be_within(0.001).of(0.390)
 
-      expect(tree[8].left).to be(-7)
-      expect(tree[8].right).to be(-8)
+      expect(tree[8].left).to eq(-7)
+      expect(tree[8].right).to eq(-8)
       expect(tree[8].distance).to be_within(0.001).of(0.382)
 
-      expect(tree[9].left).to be(-9)
-      expect(tree[9].right).to be(8)
+      expect(tree[9].left).to eq(-9)
+      expect(tree[9].right).to eq(8)
       expect(tree[9].distance).to be_within(0.001).of(3.063)
 
-      expect(tree[10].left).to be(6)
-      expect(tree[10].right).to be(-6)
+      expect(tree[10].left).to eq(6)
+      expect(tree[10].right).to eq(-6)
       expect(tree[10].distance).to be_within(0.001).of(4.578)
 
-      expect(tree[11].left).to be(-10)
-      expect(tree[11].right).to be(-11)
+      expect(tree[11].left).to eq(-10)
+      expect(tree[11].right).to eq(-11)
       expect(tree[11].distance).to be_within(0.001).of(11.536)
     end
 
@@ -324,54 +324,54 @@ describe "Cluster.treecluster" do
                                        :method    => 'm',
                                        :dist      => 'e'
 
-      expect(tree.size).to be(data.size - 1)
+      expect(tree.size).to eq(data.size - 1)
 
-      expect(tree[0].left).to be(5)
-      expect(tree[0].right).to be(4)
+      expect(tree[0].left).to eq(5)
+      expect(tree[0].right).to eq(4)
       expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      expect(tree[1].left).to be(9)
-      expect(tree[1].right).to be(12)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
       expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      expect(tree[2].left).to be(2)
-      expect(tree[2].right).to be(1)
+      expect(tree[2].left).to eq(2)
+      expect(tree[2].right).to eq(1)
       expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      expect(tree[3].left).to be(11)
-      expect(tree[3].right).to be(10)
+      expect(tree[3].left).to eq(11)
+      expect(tree[3].right).to eq(10)
       expect(tree[3].distance).to be_within(0.001).of(0.077)
 
-      expect(tree[4].left).to be(-2)
-      expect(tree[4].right).to be(-4)
+      expect(tree[4].left).to eq(-2)
+      expect(tree[4].right).to eq(-4)
       expect(tree[4].distance).to be_within(0.001).of(0.216)
 
-      expect(tree[5].left).to be(-3)
-      expect(tree[5].right).to be(0)
+      expect(tree[5].left).to eq(-3)
+      expect(tree[5].right).to eq(0)
       expect(tree[5].distance).to be_within(0.001).of(0.266)
 
-      expect(tree[6].left).to be(-5)
-      expect(tree[6].right).to be(7)
+      expect(tree[6].left).to eq(-5)
+      expect(tree[6].right).to eq(7)
       expect(tree[6].distance).to be_within(0.001).of(0.302)
 
-      expect(tree[7].left).to be(-1)
-      expect(tree[7].right).to be(3)
+      expect(tree[7].left).to eq(-1)
+      expect(tree[7].right).to eq(3)
       expect(tree[7].distance).to be_within(0.001).of(0.425)
 
-      expect(tree[8].left).to be(-8)
-      expect(tree[8].right).to be(-6)
+      expect(tree[8].left).to eq(-8)
+      expect(tree[8].right).to eq(-6)
       expect(tree[8].distance).to be_within(0.001).of(0.968)
 
-      expect(tree[9].left).to be(8)
-      expect(tree[9].right).to be(6)
+      expect(tree[9].left).to eq(8)
+      expect(tree[9].right).to eq(6)
       expect(tree[9].distance).to be_within(0.001).of(3.975)
 
-      expect(tree[10].left).to be(-10)
-      expect(tree[10].right).to be(-7)
+      expect(tree[10].left).to eq(-10)
+      expect(tree[10].right).to eq(-7)
       expect(tree[10].distance).to be_within(0.001).of(5.755)
 
-      expect(tree[11].left).to be(-11)
-      expect(tree[11].right).to be(-9)
+      expect(tree[11].left).to eq(-11)
+      expect(tree[11].right).to eq(-9)
       expect(tree[11].distance).to be_within(0.001).of(22.734)
     end
   end

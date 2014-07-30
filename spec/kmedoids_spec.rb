@@ -71,15 +71,15 @@ describe "Cluster.kmedoids" do
 
     clusterid, error, nfound = Cluster.kmedoids matrix, :passes => 1000
 
-    expect(clusterid[0]).to be(5)
-    expect(clusterid[1]).to be(5)
-    expect(clusterid[2]).to be(2)
-    expect(clusterid[3]).to be(5)
-    expect(clusterid[4]).to be(5)
-    expect(clusterid[5]).to be(5)
-    expect(clusterid[6]).to be(5)
-    expect(clusterid[7]).to be(5)
-    expect(clusterid[8]).to be(2)
+    expect(clusterid[0]).to eq(5)
+    expect(clusterid[1]).to eq(5)
+    expect(clusterid[2]).to eq(2)
+    expect(clusterid[3]).to eq(5)
+    expect(clusterid[4]).to eq(5)
+    expect(clusterid[5]).to eq(5)
+    expect(clusterid[6]).to eq(5)
+    expect(clusterid[7]).to eq(5)
+    expect(clusterid[8]).to eq(2)
 
     expect(error).to be_within(0.001).of(7.680)
   end

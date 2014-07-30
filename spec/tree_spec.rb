@@ -27,10 +27,10 @@ module Cluster
       it "fetches a copy of the node array" do
         arr = tree.to_a
         expect(arr).to be_kind_of(Array)
-        expect(arr.size).to be(3)
+        expect(arr.size).to eq(3)
         arr.clear
 
-        expect(tree.size).to be(3)
+        expect(tree.size).to eq(3)
       end
 
       it "has a string representation" do

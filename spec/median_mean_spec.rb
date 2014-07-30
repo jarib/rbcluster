@@ -11,10 +11,10 @@ describe "Cluster.{median,mean}" do
   }
 
   it "calculates the median" do
-    expect(Cluster.median(data[0])).to be(3.0)
-    expect(Cluster.median(data[1])).to be(12.5)
-    expect(Cluster.median(data[2])).to be(6.0)
-    expect(Cluster.median(data[3])).to be(1.45)
+    expect(Cluster.median(data[0])).to eq(3.0)
+    expect(Cluster.median(data[1])).to eq(12.5)
+    expect(Cluster.median(data[2])).to eq(6.0)
+    expect(Cluster.median(data[3])).to eq(1.45)
   end
 
   it "calculates the mean" do

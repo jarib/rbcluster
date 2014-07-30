@@ -27,9 +27,9 @@ describe "Cluster.somcluster" do
                                                    :niter     => 100,
                                                    :dist      => 'e'
 
-   expect(clusterid.size).to be(data.size)
-   expect(clusterid[0].size).to be(2)
-   expect(celldata[0][0].size).to be(5)
+   expect(clusterid.size).to eq(data.size)
+   expect(clusterid[0].size).to eq(2)
+   expect(celldata[0][0].size).to eq(5)
   end
 
   it "calculates somcluster for a second data set" do
@@ -74,8 +74,8 @@ describe "Cluster.somcluster" do
                                                      :inittau   => 0.02,
                                                      :niter     => 100,
                                                      :dist      => 'e'
-      expect(clusterid.size).to be(data.size)
-      expect(clusterid[0].size).to be(2)
-      expect(celldata[0][0].size).to be(2)
+      expect(clusterid.size).to eq(data.size)
+      expect(clusterid[0].size).to eq(2)
+      expect(celldata[0][0].size).to eq(2)
   end
 end

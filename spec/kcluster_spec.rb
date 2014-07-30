@@ -23,11 +23,11 @@ describe "Cluster.kcluster" do
                                                        :method    => 'a',
                                                        :dist      => 'e'
 
-    expect(clusterids.size).to be(data.size)
+    expect(clusterids.size).to eq(data.size)
     correct = [0,1,1,2]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
     clusterids.each_with_index do |ci, i|
-      expect(ci).to be(mapping[correct[i]])
+      expect(ci).to eq(mapping[correct[i]])
     end
   end
 
@@ -70,12 +70,12 @@ describe "Cluster.kcluster" do
                                                        :method    => 'a',
                                                        :dist      => 'e'
 
-    expect(clusterids.size).to be(data.size)
+    expect(clusterids.size).to eq(data.size)
 
     correct = [0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
     clusterids.each_with_index do |ci, i|
-      expect(ci).to be(mapping[correct[i]])
+      expect(ci).to eq(mapping[correct[i]])
     end
   end
 
