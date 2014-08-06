@@ -28,19 +28,19 @@ describe "Cluster.treecluster" do
                                        :method    => 'a',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 2
-      tree[0].right.should == 1
-      tree[0].distance.should be_within(0.001).of(2.600)
+      expect(tree[0].left).to eq(2)
+      expect(tree[0].right).to eq(1)
+      expect(tree[0].distance).to be_within(0.001).of(2.600)
 
-      tree[1].left.should == -1
-      tree[1].right.should == 0
-      tree[1].distance.should be_within(0.001).of(7.300)
+      expect(tree[1].left).to eq(-1)
+      expect(tree[1].right).to eq(0)
+      expect(tree[1].distance).to be_within(0.001).of(7.300)
 
-      tree[2].left.should == 3
-      tree[2].right.should == -2
-      tree[2].distance.should be_within(0.001).of(21.348)
+      expect(tree[2].left).to eq(3)
+      expect(tree[2].right).to eq(-2)
+      expect(tree[2].distance).to be_within(0.001).of(21.348)
     end
 
     it "calcultes pairwise single-linkage clustering" do
@@ -50,19 +50,19 @@ describe "Cluster.treecluster" do
                                        :method    => 's',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 1
-      tree[0].right.should == 2
-      tree[0].distance.should be_within(0.001).of(2.600)
+      expect(tree[0].left).to eq(1)
+      expect(tree[0].right).to eq(2)
+      expect(tree[0].distance).to be_within(0.001).of(2.600)
 
-      tree[1].left.should == 0
-      tree[1].right.should == -1
-      tree[1].distance.should be_within(0.001).of(5.800)
+      expect(tree[1].left).to eq(0)
+      expect(tree[1].right).to eq(-1)
+      expect(tree[1].distance).to be_within(0.001).of(5.800)
 
-      tree[2].left.should == -2
-      tree[2].right.should == 3
-      tree[2].distance.should be_within(0.001).of(12.908)
+      expect(tree[2].left).to eq(-2)
+      expect(tree[2].right).to eq(3)
+      expect(tree[2].distance).to be_within(0.001).of(12.908)
     end
 
     it "calculates pairwise centroid-linkage clustering" do
@@ -72,17 +72,17 @@ describe "Cluster.treecluster" do
                                        :method    => 'c',
                                        :dist      => 'e'
 
-     tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 1
-      tree[0].right.should == 2
-      tree[0].distance.should be_within(0.001).of(2.600)
-      tree[1].left.should == 0
-      tree[1].right.should == -1
-      tree[1].distance.should be_within(0.001).of(6.650)
-      tree[2].left.should == -2
-      tree[2].right.should == 3
-      tree[2].distance.should be_within(0.001).of(19.437)
+      expect(tree[0].left).to eq(1)
+      expect(tree[0].right).to eq(2)
+      expect(tree[0].distance).to be_within(0.001).of(2.600)
+      expect(tree[1].left).to eq(0)
+      expect(tree[1].right).to eq(-1)
+      expect(tree[1].distance).to be_within(0.001).of(6.650)
+      expect(tree[2].left).to eq(-2)
+      expect(tree[2].right).to eq(3)
+      expect(tree[2].distance).to be_within(0.001).of(19.437)
     end
 
     it "calculates pairwise maximum-linkage clustering" do
@@ -92,17 +92,17 @@ describe "Cluster.treecluster" do
                                        :method    => 'm',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 2
-      tree[0].right.should == 1
-      tree[0].distance.should be_within(0.001).of(2.600)
-      tree[1].left.should == -1
-      tree[1].right.should == 0
-      tree[1].distance.should be_within(0.001).of(8.800)
-      tree[2].left.should == 3
-      tree[2].right.should == -2
-      tree[2].distance.should be_within(0.001).of(32.508)
+      expect(tree[0].left).to eq(2)
+      expect(tree[0].right).to eq(1)
+      expect(tree[0].distance).to be_within(0.001).of(2.600)
+      expect(tree[1].left).to eq(-1)
+      expect(tree[1].right).to eq(0)
+      expect(tree[1].distance).to be_within(0.001).of(8.800)
+      expect(tree[2].left).to eq(3)
+      expect(tree[2].right).to eq(-2)
+      expect(tree[2].distance).to be_within(0.001).of(32.508)
     end
   end
 
@@ -151,54 +151,54 @@ describe "Cluster.treecluster" do
                                        :method    => 'a',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
-      tree[0].left.should == 5
-      tree[0].right.should == 4
-      tree[0].distance.should be_within(0.001).of(0.003)
+      expect(tree.size).to eq(data.size - 1)
+      expect(tree[0].left).to eq(5)
+      expect(tree[0].right).to eq(4)
+      expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      tree[1].left.should == 9
-      tree[1].right.should == 12
-      tree[1].distance.should be_within(0.001).of(0.029)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
+      expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      tree[2].left.should == 2
-      tree[2].right.should == 1
-      tree[2].distance.should be_within(0.001).of(0.061)
+      expect(tree[2].left).to eq(2)
+      expect(tree[2].right).to eq(1)
+      expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      tree[3].left.should == 11
-      tree[3].right.should == -2
-      tree[3].distance.should be_within(0.001).of(0.070)
+      expect(tree[3].left).to eq(11)
+      expect(tree[3].right).to eq(-2)
+      expect(tree[3].distance).to be_within(0.001).of(0.070)
 
-      tree[4].left.should == -4
-      tree[4].right.should == 10
-      tree[4].distance.should be_within(0.001).of(0.128)
+      expect(tree[4].left).to eq(-4)
+      expect(tree[4].right).to eq(10)
+      expect(tree[4].distance).to be_within(0.001).of(0.128)
 
-      tree[5].left.should == 7
-      tree[5].right.should == -5
-      tree[5].distance.should be_within(0.001).of(0.224)
+      expect(tree[5].left).to eq(7)
+      expect(tree[5].right).to eq(-5)
+      expect(tree[5].distance).to be_within(0.001).of(0.224)
 
-      tree[6].left.should == -3
-      tree[6].right.should == 0
-      tree[6].distance.should be_within(0.001).of(0.254)
+      expect(tree[6].left).to eq(-3)
+      expect(tree[6].right).to eq(0)
+      expect(tree[6].distance).to be_within(0.001).of(0.254)
 
-      tree[7].left.should == -1
-      tree[7].right.should == 3
-      tree[7].distance.should be_within(0.001).of(0.391)
+      expect(tree[7].left).to eq(-1)
+      expect(tree[7].right).to eq(3)
+      expect(tree[7].distance).to be_within(0.001).of(0.391)
 
-      tree[8].left.should == -8
-      tree[8].right.should == -7
-      tree[8].distance.should be_within(0.001).of(0.532)
+      expect(tree[8].left).to eq(-8)
+      expect(tree[8].right).to eq(-7)
+      expect(tree[8].distance).to be_within(0.001).of(0.532)
 
-      tree[9].left.should == 8
-      tree[9].right.should == -9
-      tree[9].distance.should be_within(0.001).of(3.234)
+      expect(tree[9].left).to eq(8)
+      expect(tree[9].right).to eq(-9)
+      expect(tree[9].distance).to be_within(0.001).of(3.234)
 
-      tree[10].left.should == -6
-      tree[10].right.should == 6
-      tree[10].distance.should be_within(0.001).of(4.636)
+      expect(tree[10].left).to eq(-6)
+      expect(tree[10].right).to eq(6)
+      expect(tree[10].distance).to be_within(0.001).of(4.636)
 
-      tree[11].left.should == -11
-      tree[11].right.should == -10
-      tree[11].distance.should be_within(0.001).of(12.741)
+      expect(tree[11].left).to eq(-11)
+      expect(tree[11].right).to eq(-10)
+      expect(tree[11].distance).to be_within(0.001).of(12.741)
     end
 
     it "calculates pairwise single-linkage clustering" do
@@ -208,55 +208,55 @@ describe "Cluster.treecluster" do
                                        :method    => 's',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 4
-      tree[0].right.should == 5
-      tree[0].distance.should be_within(0.001).of(0.003)
+      expect(tree[0].left).to eq(4)
+      expect(tree[0].right).to eq(5)
+      expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      tree[1].left.should == 9
-      tree[1].right.should == 12
-      tree[1].distance.should be_within(0.001).of(0.029)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
+      expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      tree[2].left.should == 11
-      tree[2].right.should == -2
-      tree[2].distance.should be_within(0.001).of(0.033)
+      expect(tree[2].left).to eq(11)
+      expect(tree[2].right).to eq(-2)
+      expect(tree[2].distance).to be_within(0.001).of(0.033)
 
-      tree[3].left.should == 1
-      tree[3].right.should == 2
-      tree[3].distance.should be_within(0.001).of(0.061)
+      expect(tree[3].left).to eq(1)
+      expect(tree[3].right).to eq(2)
+      expect(tree[3].distance).to be_within(0.001).of(0.061)
 
-      tree[4].left.should == 10
-      tree[4].right.should == -3
-      tree[4].distance.should be_within(0.001).of(0.077)
+      expect(tree[4].left).to eq(10)
+      expect(tree[4].right).to eq(-3)
+      expect(tree[4].distance).to be_within(0.001).of(0.077)
 
-      tree[5].left.should == 7
-      tree[5].right.should == -5
-      tree[5].distance.should be_within(0.001).of(0.092)
+      expect(tree[5].left).to eq(7)
+      expect(tree[5].right).to eq(-5)
+      expect(tree[5].distance).to be_within(0.001).of(0.092)
 
-      tree[6].left.should == 0
-      tree[6].right.should == -4
-      tree[6].distance.should be_within(0.001).of(0.242)
+      expect(tree[6].left).to eq(0)
+      expect(tree[6].right).to eq(-4)
+      expect(tree[6].distance).to be_within(0.001).of(0.242)
 
-      tree[7].left.should == -7
-      tree[7].right.should == -1
-      tree[7].distance.should be_within(0.001).of(0.246)
+      expect(tree[7].left).to eq(-7)
+      expect(tree[7].right).to eq(-1)
+      expect(tree[7].distance).to be_within(0.001).of(0.246)
 
-      tree[8].left.should == 3
-      tree[8].right.should == -8
-      tree[8].distance.should be_within(0.001).of(0.287)
+      expect(tree[8].left).to eq(3)
+      expect(tree[8].right).to eq(-8)
+      expect(tree[8].distance).to be_within(0.001).of(0.287)
 
-      tree[9].left.should == -9
-      tree[9].right.should == 8
-      tree[9].distance.should be_within(0.001).of(1.936)
+      expect(tree[9].left).to eq(-9)
+      expect(tree[9].right).to eq(8)
+      expect(tree[9].distance).to be_within(0.001).of(1.936)
 
-      tree[10].left.should == -10
-      tree[10].right.should == -6
-      tree[10].distance.should be_within(0.001).of(3.432)
+      expect(tree[10].left).to eq(-10)
+      expect(tree[10].right).to eq(-6)
+      expect(tree[10].distance).to be_within(0.001).of(3.432)
 
-      tree[11].left.should == 6
-      tree[11].right.should == -11
-      tree[11].distance.should be_within(0.001).of(3.535)
+      expect(tree[11].left).to eq(6)
+      expect(tree[11].right).to eq(-11)
+      expect(tree[11].distance).to be_within(0.001).of(3.535)
     end
 
     it "calculates pairwise centroid-linkage clustering" do
@@ -266,55 +266,55 @@ describe "Cluster.treecluster" do
                                        :method    => 'c',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 4
-      tree[0].right.should == 5
-      tree[0].distance.should be_within(0.001).of(0.003)
+      expect(tree[0].left).to eq(4)
+      expect(tree[0].right).to eq(5)
+      expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      tree[1].left.should == 12
-      tree[1].right.should == 9
-      tree[1].distance.should be_within(0.001).of(0.029)
+      expect(tree[1].left).to eq(12)
+      expect(tree[1].right).to eq(9)
+      expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      tree[2].left.should == 1
-      tree[2].right.should == 2
-      tree[2].distance.should be_within(0.001).of(0.061)
+      expect(tree[2].left).to eq(1)
+      expect(tree[2].right).to eq(2)
+      expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      tree[3].left.should == -2
-      tree[3].right.should == 11
-      tree[3].distance.should be_within(0.001).of(0.063)
+      expect(tree[3].left).to eq(-2)
+      expect(tree[3].right).to eq(11)
+      expect(tree[3].distance).to be_within(0.001).of(0.063)
 
-      tree[4].left.should == 10
-      tree[4].right.should == -4
-      tree[4].distance.should be_within(0.001).of(0.109)
+      expect(tree[4].left).to eq(10)
+      expect(tree[4].right).to eq(-4)
+      expect(tree[4].distance).to be_within(0.001).of(0.109)
 
-      tree[5].left.should == -5
-      tree[5].right.should == 7
-      tree[5].distance.should be_within(0.001).of(0.189)
+      expect(tree[5].left).to eq(-5)
+      expect(tree[5].right).to eq(7)
+      expect(tree[5].distance).to be_within(0.001).of(0.189)
 
-      tree[6].left.should == 0
-      tree[6].right.should == -3
-      tree[6].distance.should be_within(0.001).of(0.239)
+      expect(tree[6].left).to eq(0)
+      expect(tree[6].right).to eq(-3)
+      expect(tree[6].distance).to be_within(0.001).of(0.239)
 
-      tree[7].left.should == 3
-      tree[7].right.should == -1
-      tree[7].distance.should be_within(0.001).of(0.390)
+      expect(tree[7].left).to eq(3)
+      expect(tree[7].right).to eq(-1)
+      expect(tree[7].distance).to be_within(0.001).of(0.390)
 
-      tree[8].left.should == -7
-      tree[8].right.should == -8
-      tree[8].distance.should be_within(0.001).of(0.382)
+      expect(tree[8].left).to eq(-7)
+      expect(tree[8].right).to eq(-8)
+      expect(tree[8].distance).to be_within(0.001).of(0.382)
 
-      tree[9].left.should == -9
-      tree[9].right.should == 8
-      tree[9].distance.should be_within(0.001).of(3.063)
+      expect(tree[9].left).to eq(-9)
+      expect(tree[9].right).to eq(8)
+      expect(tree[9].distance).to be_within(0.001).of(3.063)
 
-      tree[10].left.should == 6
-      tree[10].right.should == -6
-      tree[10].distance.should be_within(0.001).of(4.578)
+      expect(tree[10].left).to eq(6)
+      expect(tree[10].right).to eq(-6)
+      expect(tree[10].distance).to be_within(0.001).of(4.578)
 
-      tree[11].left.should == -10
-      tree[11].right.should == -11
-      tree[11].distance.should be_within(0.001).of(11.536)
+      expect(tree[11].left).to eq(-10)
+      expect(tree[11].right).to eq(-11)
+      expect(tree[11].distance).to be_within(0.001).of(11.536)
     end
 
     it "calculates pairwise maximum-linkage clustering" do
@@ -324,55 +324,55 @@ describe "Cluster.treecluster" do
                                        :method    => 'm',
                                        :dist      => 'e'
 
-      tree.size.should == data.size - 1
+      expect(tree.size).to eq(data.size - 1)
 
-      tree[0].left.should == 5
-      tree[0].right.should == 4
-      tree[0].distance.should be_within(0.001).of(0.003)
+      expect(tree[0].left).to eq(5)
+      expect(tree[0].right).to eq(4)
+      expect(tree[0].distance).to be_within(0.001).of(0.003)
 
-      tree[1].left.should == 9
-      tree[1].right.should == 12
-      tree[1].distance.should be_within(0.001).of(0.029)
+      expect(tree[1].left).to eq(9)
+      expect(tree[1].right).to eq(12)
+      expect(tree[1].distance).to be_within(0.001).of(0.029)
 
-      tree[2].left.should == 2
-      tree[2].right.should == 1
-      tree[2].distance.should be_within(0.001).of(0.061)
+      expect(tree[2].left).to eq(2)
+      expect(tree[2].right).to eq(1)
+      expect(tree[2].distance).to be_within(0.001).of(0.061)
 
-      tree[3].left.should == 11
-      tree[3].right.should == 10
-      tree[3].distance.should be_within(0.001).of(0.077)
+      expect(tree[3].left).to eq(11)
+      expect(tree[3].right).to eq(10)
+      expect(tree[3].distance).to be_within(0.001).of(0.077)
 
-      tree[4].left.should == -2
-      tree[4].right.should == -4
-      tree[4].distance.should be_within(0.001).of(0.216)
+      expect(tree[4].left).to eq(-2)
+      expect(tree[4].right).to eq(-4)
+      expect(tree[4].distance).to be_within(0.001).of(0.216)
 
-      tree[5].left.should == -3
-      tree[5].right.should == 0
-      tree[5].distance.should be_within(0.001).of(0.266)
+      expect(tree[5].left).to eq(-3)
+      expect(tree[5].right).to eq(0)
+      expect(tree[5].distance).to be_within(0.001).of(0.266)
 
-      tree[6].left.should == -5
-      tree[6].right.should == 7
-      tree[6].distance.should be_within(0.001).of(0.302)
+      expect(tree[6].left).to eq(-5)
+      expect(tree[6].right).to eq(7)
+      expect(tree[6].distance).to be_within(0.001).of(0.302)
 
-      tree[7].left.should == -1
-      tree[7].right.should == 3
-      tree[7].distance.should be_within(0.001).of(0.425)
+      expect(tree[7].left).to eq(-1)
+      expect(tree[7].right).to eq(3)
+      expect(tree[7].distance).to be_within(0.001).of(0.425)
 
-      tree[8].left.should == -8
-      tree[8].right.should == -6
-      tree[8].distance.should be_within(0.001).of(0.968)
+      expect(tree[8].left).to eq(-8)
+      expect(tree[8].right).to eq(-6)
+      expect(tree[8].distance).to be_within(0.001).of(0.968)
 
-      tree[9].left.should == 8
-      tree[9].right.should == 6
-      tree[9].distance.should be_within(0.001).of(3.975)
+      expect(tree[9].left).to eq(8)
+      expect(tree[9].right).to eq(6)
+      expect(tree[9].distance).to be_within(0.001).of(3.975)
 
-      tree[10].left.should == -10
-      tree[10].right.should == -7
-      tree[10].distance.should be_within(0.001).of(5.755)
+      expect(tree[10].left).to eq(-10)
+      expect(tree[10].right).to eq(-7)
+      expect(tree[10].distance).to be_within(0.001).of(5.755)
 
-      tree[11].left.should == -11
-      tree[11].right.should == -9
-      tree[11].distance.should be_within(0.001).of(22.734)
+      expect(tree[11].left).to eq(-11)
+      expect(tree[11].right).to eq(-9)
+      expect(tree[11].distance).to be_within(0.001).of(22.734)
     end
   end
 
@@ -385,7 +385,7 @@ describe "Cluster.treecluster" do
           [ 12.1, 92.0, 90.0, 95.0, 90.0 ]
         ]
 
-      lambda { Cluster.treecluster(ragged) }.should raise_error(ArgumentError)
+      expect { Cluster.treecluster(ragged) }.to raise_error(ArgumentError)
     end
 
     it "fails for a matrix with bad cells" do
@@ -395,7 +395,7 @@ describe "Cluster.treecluster" do
         [ 7.1, 7.2, 7.3, nil, nil]
       ]
 
-      lambda { Cluster.treecluster(bad_cells) }.should raise_error(TypeError)
+      expect { Cluster.treecluster(bad_cells) }.to raise_error(TypeError)
     end
 
     it "fails for a matrix with a bad row" do
@@ -405,7 +405,7 @@ describe "Cluster.treecluster" do
         [ 23.1, 23.0, 23.0, 23.0, 23.0]
       ]
 
-      lambda { Cluster.treecluster(bad_row) }.should raise_error(TypeError)
+      expect { Cluster.treecluster(bad_row) }.to raise_error(TypeError)
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "Cluster.kcluster" do
-  it "should run kcluster for the given data" do
+  it "runs kcluster for the given data" do
     nclusters = 3
     # First data set
     weight = [1,1,1,1,1]
@@ -23,15 +23,15 @@ describe "Cluster.kcluster" do
                                                        :method    => 'a',
                                                        :dist      => 'e'
 
-    clusterids.size.should == data.size
+    expect(clusterids.size).to eq(data.size)
     correct = [0,1,1,2]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
     clusterids.each_with_index do |ci, i|
-      ci.should == mapping[correct[i]]
+      expect(ci).to eq(mapping[correct[i]])
     end
   end
 
-  it "should run kcluster for a second set of data" do
+  it "runs kcluster for a second set of data" do
     nclusters = 3
     weight = [1,1]
     data = [ [ 1.1, 1.2 ],
@@ -70,26 +70,26 @@ describe "Cluster.kcluster" do
                                                        :method    => 'a',
                                                        :dist      => 'e'
 
-    clusterids.size.should == data.size
+    expect(clusterids.size).to eq(data.size)
 
     correct = [0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1]
     mapping = nclusters.times.map { |n| clusterids[correct.index(n)] }
     clusterids.each_with_index do |ci, i|
-      ci.should == mapping[correct[i]]
+      expect(ci).to eq(mapping[correct[i]])
     end
   end
 
   it "raises ArgumentError if passed inconsistent data" do
-    lambda {
+    expect {
       Cluster.kcluster [[1,2,3], [1,2,3,4]], {}
-    }.should raise_error(ArgumentError, "expected 3 columns, row has 4")
+    }.to raise_error(ArgumentError, "expected 3 columns, row has 4")
   end
 
   it "will use default options" do
     data = [[1,1,1], [10,10,0], [0,0,0]]
     clusterids, error, nfound = Cluster.kcluster(data, :passes => 1000)
 
-    clusterids.should be_kind_of(Array)
-    [[0, 1, 0], [1, 0, 1]].should include(clusterids)
+    expect(clusterids).to be_kind_of(Array)
+    expect([[0, 1, 0], [1, 0, 1]]).to include(clusterids)
   end
 end

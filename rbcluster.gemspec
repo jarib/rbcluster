@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.extensions    = `git ls-files -- ext/**/extconf.rb`.split("\n")
 
   s.add_development_dependency "rake-compiler"
-  s.add_development_dependency "rspec", "~> 2.6.0"
+  s.add_development_dependency "rspec", "~> 3.0"
 end
